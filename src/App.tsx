@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import "./App.css";
@@ -18,6 +18,7 @@ import {
   tokenToDecoode,
 } from "./services/userServices";
 import { Jwt } from "./interfaces/Jwt";
+
 
 interface GlobalPropsType {
   isUserLogedin: boolean;
