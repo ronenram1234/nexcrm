@@ -1,33 +1,66 @@
-export interface Image {
-    url: string;       // URL of the image
-    alt: string;       // Alt text for the image
-    _id?: string;      // Unique ID for the image (optional)
-  }
+interface Image {
+  url: string;
+  alt: string;
+  _id?: string;
+}
+
+interface Address {
+  state?: string;
+  country: string;
+  city: string;
+  street: string;
+  houseNumber: number;
+  zip?: number;
+  _id?: string;
+}
+
+export interface CardRecFull {
+  _id: string;
+  title: string;
+  subtitle?: string;
+  description?: string;
+  phone: string;
+  email: string;
+  web?: string;
+  image: Image;
+  address: Address;
+  bizNumber?: number;
+  likes?: string[];
+  user_id: string;
+  createdAt: string;
+  __v?: number;
+}
+
+// create new card
+interface NewImage {
+  url: string;
+  alt: string;
   
-  export interface Address {
-    state?: string;     // State (optional)
-    country: string;    // Country
-    city: string;       // City
-    street: string;     // Street
-    houseNumber: number; // House number
-    zip?: number;       // ZIP code (optional)
-    _id?: string;       // Unique ID for the address (optional)
-  }
+}
+
+interface NewAddress {
+  state?: string;
+  country: string;
+  city: string;
+  street: string;
+  houseNumber: number;
+  zip?: number;
   
-  export interface Card {
-    _id: string;              // Unique identifier for the card
-    title: string;            // Title of the card
-    subtitle?: string;        // Subtitle of the card (optional)
-    description?: string;     // Description of the card (optional)
-    phone: string;            // Phone number
-    email: string;            // Email address
-    web?: string;             // Website URL (optional)
-    image?: Image;            // Image object (optional)
-    address?: Address;        // Address object (optional)
-    bizNumber?: number;       // Business number (optional)
-    likes?: string[];         // Array of user IDs who liked the card (optional)
-    user_id: string;          // ID of the user who created the card
-    createdAt: string;        // Timestamp of card creation (ISO format)
-    __v?: number;             // Version key (optional, for database internal use)
-  }
+}
+
+export interface NewCard {
+  _id: string;
+  title: string;
+  subtitle?: string;
+  description?: string;
+  phone: string;
+  email: string;
+  web?: string;
+  image: NewImage;
+  address: NewAddress;
+  bizNumber?: number;
+  likes?: string[];
+  user_id: string;
+  createdAt: string;
   
+}

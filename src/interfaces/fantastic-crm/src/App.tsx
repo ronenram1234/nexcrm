@@ -7,7 +7,7 @@ import Main from "./components/Main";
 import PageNotFound from "./components/PageNotFound";
 import Footer from "./components/Footer";
 
-// import { ToastContainer } from "react-bootstrap";
+import { ToastContainer } from "react-bootstrap";
 import { User } from "./interfaces/User";
 
 // import { useSetCurrentUser } from "./services/useSetCurrentUser";
@@ -18,7 +18,6 @@ import {
   tokenToDecoode,
 } from "./services/userServices";
 import { Jwt } from "./interfaces/Jwt";
-import { CardRecFull } from "./interfaces/Card";
 
 interface GlobalPropsType {
   isUserLogedin: boolean;
@@ -27,8 +26,6 @@ interface GlobalPropsType {
   setToken: React.Dispatch<React.SetStateAction<string>>;
   currentUser: User | null;
   setCurrentUser: React.Dispatch<React.SetStateAction<User | null>>;
-  cardArray: CardRecFull[] | null;
-  setCardArray: React.Dispatch<React.SetStateAction<CardRecFull[] | null>>;
 
   isDarkMode: boolean;
   setIsDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
@@ -40,8 +37,6 @@ export const GlobalProps = createContext<GlobalPropsType>({
   setToken: () => {},
   currentUser: null,
   setCurrentUser: () => {},
-  cardArray: null,
-  setCardArray: () => {},
 
   isDarkMode: false,
   setIsDarkMode: () => {},
@@ -59,7 +54,6 @@ function App() {
   );
 
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [cardArray, setCardArray] = useState<CardRecFull[] | null>([]);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   const globalContextValue = {
@@ -69,25 +63,19 @@ function App() {
     setToken,
     currentUser,
     setCurrentUser,
-    cardArray,
-    setCardArray,
     isDarkMode,
     setIsDarkMode,
   };
 
   // check if user alreadt login before
   // useSetCurrentUser();
-
   useEffect(() => {
     if (localToken !== "") {
       // setIsUsserLogedin(true);
       const jwtUser: Jwt = tokenToDecoode(localToken);
       getUserDetail(jwtUser._id, localToken)
         .then((res) => {
-          // test of user admin/business/regular
-          // console.log(res.data)
-          const userRec = { ...res.data, isAdmin: false, isBusiness: false };
-          setCurrentUser(userRec);
+          setCurrentUser(res.data);
         })
         .catch((err) => {
           console.log(err);
@@ -96,7 +84,7 @@ function App() {
           setIsUsserLogedin(false);
         });
     }
-  }, [localToken]);
+  }, []);
 
   return (
     <>
@@ -105,15 +93,15 @@ function App() {
         <div className="App">
           <>
             <NavBar />
-            <div className="container">
-              <Router>
-                <Routes>
-                  <Route path="/" element={<Main />} />
+            {console.log("App")}
+            <Router>
+              <Routes>
+                <Route path="/" element={<Main />} />
 
-                  <Route path="*" element={<PageNotFound />} />
-                </Routes>
-              </Router>
-            </div>
+                <Route path="*" element={<PageNotFound />} />
+              </Routes>
+            </Router>
+
             <Footer />
           </>
         </div>
