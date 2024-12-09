@@ -7,6 +7,7 @@ import { errorMsg } from "../services/feedbackService";
 
 import CraeteCard from "./CraeteCard";
 import { Carousel, Row, Tab, Tabs } from "react-bootstrap";
+import { useLocation } from "react-router-dom";
 
 interface MainProps {}
 
@@ -47,6 +48,9 @@ const Main: FunctionComponent<MainProps> = () => {
 
   const cardChunks = chunkCards(cardArray || [], 10); // 15 cards per tab
 
+  const location = useLocation(); // Hook to get location object
+  console.log(location.pathname)
+
   return (
     <div className="container mt-4">
     <Tabs
@@ -62,7 +66,7 @@ const Main: FunctionComponent<MainProps> = () => {
               <Carousel.Item key={ind}>
                 <Row xs={1} sm={2} md={3} lg={4} className="g-4">
                   {chunk.map((card, cardIndex) => (
-                    <CraeteCard item={card} ind={cardIndex} key={cardIndex} />
+                    <CraeteCard item={card} ind={cardIndex}  />
                   ))}
                 </Row>
               </Carousel.Item>

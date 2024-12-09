@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useContext, useState } from "react";
 import { CardRecFull } from "../interfaces/Card";
 
 import Card from "react-bootstrap/Card";
@@ -11,6 +11,7 @@ import {
   faPhone,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
+import { GlobalProps } from "../App";
 
 interface CraeteCardProps {
   item: CardRecFull;
@@ -23,9 +24,11 @@ const CraeteCard: FunctionComponent<CraeteCardProps> = ({ item, ind }) => {
     `${item.address.street} ${item.address.houseNumber}, ${item.address.city},  ${item.address.country}, ${item.address.zip}`
   ); //-
 
+  const { currentUser } = useContext(GlobalProps);
+
   return (
     <>
-      <Col>
+      <Col key={ind}>
         <Card className="h-100">
           <Card.Img
             variant="top"
@@ -44,10 +47,23 @@ const CraeteCard: FunctionComponent<CraeteCardProps> = ({ item, ind }) => {
             <ListGroup.Item>Card Number: {item._id}</ListGroup.Item>
           </ListGroup>
           <Card.Body className="icons">
-            <FontAwesomeIcon icon={faPenToSquare} />
             <FontAwesomeIcon icon={faPhone} />
             <FontAwesomeIcon icon={faHeart} />
-            <FontAwesomeIcon icon={faTrash} />
+            {currentUser?.isAdmin && (
+              <>
+                <FontAwesomeIcon icon={faPenToSquare} />
+                <FontAwesomeIcon icon={faPhone} />
+                <FontAwesomeIcon icon={faHeart} />
+                <FontAwesomeIcon icon={faTrash} />
+              </>
+            )}
+
+            {currentUser?.isBusiness && (
+              <>
+                <FontAwesomeIcon icon={faPhone} />
+                <FontAwesomeIcon icon={faHeart} />
+              </>
+            )}
           </Card.Body>
         </Card>
       </Col>
