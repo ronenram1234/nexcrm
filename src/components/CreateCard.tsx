@@ -1,4 +1,4 @@
-import { FunctionComponent, useContext, useState } from "react";
+import { FunctionComponent, useContext, useEffect, useState } from "react";
 import { CardRecFull } from "../interfaces/Card";
 
 import Card from "react-bootstrap/Card";
@@ -7,32 +7,54 @@ import Col from "react-bootstrap/Col";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHeart,
+  
   faPenToSquare,
   faPhone,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
+import { faHeart as faRegularHeart } from '@fortawesome/free-regular-svg-icons';  // Regular heart icon
+
+
 import { GlobalProps } from "../App";
 
-interface CraeteCardProps {
+interface CreateCardProps {
   item: CardRecFull;
   ind: number;
+  screen: string;
 }
 
 //-
-const CraeteCard: FunctionComponent<CraeteCardProps> = ({ item, ind }) => {
+const CreateCard: FunctionComponent<CreateCardProps> = ({
+  item,
+  ind,
+  screen,
+}) => {
   const [address, setddress] = useState<string>(
     `${item.address.street} ${item.address.houseNumber}, ${item.address.city},  ${item.address.country}, ${item.address.zip}`
   ); //-
 
   const [imgError, setImgError] = useState<boolean>(false);
+  const [isHeartSelected, setIsHeartSelected] = useState(false);
 
   const { currentUser } = useContext(GlobalProps);
 
-   // Handle image error
-   const handleImageError = () => {
+  // Handle image error
+  const handleImageError = () => {
     console.log("Image failed to load for item ID:", item._id);
-    setImgError(true); 
+    setImgError(true);
   };
+
+  function handleHeartClick() {
+    setIsHeartSelected(!isHeartSelected);
+  }
+
+  useEffect(() => {
+    if (isHeartSelected) {
+      console.log("Heart selected");
+    } else {
+      console.log("Heart not selected");
+    }
+  }, [isHeartSelected]);
 
   return (
     <>
@@ -57,20 +79,23 @@ const CraeteCard: FunctionComponent<CraeteCardProps> = ({ item, ind }) => {
           </ListGroup>
           <Card.Body className="icons">
             <FontAwesomeIcon icon={faPhone} />
-            <FontAwesomeIcon icon={faHeart} />
-            {currentUser?.isAdmin && (
-              <>
-                <FontAwesomeIcon icon={faPenToSquare} />
-                <FontAwesomeIcon icon={faPhone} />
-                <FontAwesomeIcon icon={faHeart} />
-                <FontAwesomeIcon icon={faTrash} />
-              </>
+            {isHeartSelected ? (
+              <FontAwesomeIcon
+                icon={faHeart}
+                onClick={() => handleHeartClick()}
+              />
+            ) : (
+              <FontAwesomeIcon
+                icon={faRegularHeart}
+                onClick={() => handleHeartClick()}
+              />
             )}
 
-            {currentUser?.isBusiness && (
+            {(currentUser?.isAdmin ||
+              (currentUser?.isBusiness && screen === "Mycards")) && (
               <>
-                <FontAwesomeIcon icon={faPhone} />
-                <FontAwesomeIcon icon={faHeart} />
+                <FontAwesomeIcon icon={faPenToSquare} />
+                <FontAwesomeIcon icon={faTrash} />
               </>
             )}
           </Card.Body>
@@ -80,4 +105,4 @@ const CraeteCard: FunctionComponent<CraeteCardProps> = ({ item, ind }) => {
   );
 };
 
-export default CraeteCard;
+export default CreateCard;

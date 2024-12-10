@@ -4,13 +4,15 @@ import { GlobalProps } from "../App";
 import ModalLoginReg from "./ModalLoginReg";
 
 
-import CraeteCard from "./CraeteCard";
+import CreateCard from "./CreateCard";
 import { Carousel, Row, Tab, Tabs } from "react-bootstrap";
 
 
-interface CardsCarouselProps {}
+interface CardsCarouselProps {
+  screen:string;
+}
 
-const CardsCarousel: FunctionComponent<CardsCarouselProps> = () => {
+const CardsCarousel: FunctionComponent<CardsCarouselProps> = ({screen}) => {
   const {  isUserLogedin, cardArray } =
     useContext(GlobalProps);
   const [activeTab, setActiveTab] = useState<string>("Tab 1");
@@ -44,7 +46,7 @@ const CardsCarousel: FunctionComponent<CardsCarouselProps> = () => {
                 <Carousel.Item key={ind}>
                   <Row xs={1} sm={2} md={3} lg={4} className="g-4">
                     {chunk.map((card, cardIndex) => (
-                      <CraeteCard item={card} ind={cardIndex} />
+                      <CreateCard item={card} ind={cardIndex} screen={screen}/>
                     ))}
                   </Row>
                 </Carousel.Item>

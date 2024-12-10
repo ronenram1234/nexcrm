@@ -89,7 +89,7 @@ function App() {
       getUserDetail(jwtUser._id, localToken)
         .then((res) => {
           // test of user admin/business/regular
-          const userRec = { ...res.data, isAdmin: true, isBusiness: true };
+          const userRec = { ...res.data, isAdmin: false, isBusiness: true };
           setCurrentUser(userRec);
           // setCurrentUser(res.data)
 

@@ -28,7 +28,7 @@ const Main: FunctionComponent<MainProps> = () => {
     getAllCardsFromAPI();
   }, [setCardArray]);
 
-  return <CardsCarousel />;
+  return <CardsCarousel screen="Main"/>;
 };
 
 export default Main;
