@@ -2,11 +2,12 @@ import { FunctionComponent, useContext } from "react";
 import { NavigateFunction, NavLink, useNavigate } from "react-router-dom";
 
 import { GlobalProps } from "../App";
+import { Margin } from "@mui/icons-material";
 
 interface NavBarProps {}
 
 const NavBar: FunctionComponent<NavBarProps> = () => {
-  const { currentUser, isDarkMode, setIsDarkMode } = useContext(GlobalProps);
+  const { currentUser, isDarkMode, setIsDarkMode,setIsUsserLogedin } = useContext(GlobalProps);
 
   const navigate: NavigateFunction = useNavigate();
   function handleDark() {
@@ -99,23 +100,32 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
                 <i
                   className="fa-solid fa-moon"
                   onClick={() => handleDark()}
+                  style={{ width: "10px", margin:"10px"}}
                 ></i>
               ) : (
-                <i className="fa-solid fa-sun" onClick={() => handleDark()}></i>
+                <i className="fa-solid fa-sun" onClick={() => handleDark()} style={{ width: "10px", margin:"10px"}}></i>
               )}
+              <img
+                src={currentUser?.image.url}
+                className="img-fluid rounded-top"
+                alt={currentUser?.image.alt}
+                style={{ width: "10px", margin:"10px"}}
+              />
+              
 
-              {/* <form className="d-flex" role="search">
+              <form className="d-flex" role="search">
                 <button
                   className="btn btn-outline-info"
                   type="submit"
                   onClick={() => {
+                    localStorage.removeItem("crmUserId");
+                    setIsUsserLogedin(false)
                     navigate("/");
-                    localStorage.removeItem("userId");
                   }}
                 >
                   Logout
                 </button>
-              </form> */}
+              </form>
             </>
           </div>
         </div>
