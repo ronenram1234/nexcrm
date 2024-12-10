@@ -1,63 +1,125 @@
 import { FunctionComponent, useContext } from "react";
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
+import { NavigateFunction, NavLink, useNavigate } from "react-router-dom";
 
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import InputGroup from "react-bootstrap/InputGroup";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { GlobalProps } from "../App";
 
 interface NavBarProps {}
 
 const NavBar: FunctionComponent<NavBarProps> = () => {
-  const { currentUser } = useContext(GlobalProps);
+  const { currentUser, isDarkMode, setIsDarkMode } = useContext(GlobalProps);
+
+  const navigate: NavigateFunction = useNavigate();
+  function handleDark() {
+    setIsDarkMode(!isDarkMode);
+  }
+
   return (
     <>
-      <Navbar bg="primary" data-bs-theme="dark">
-        <>
-          <Container>
-            <Navbar.Brand href="#home">NEXCRM</Navbar.Brand>
-            <Nav className="me-auto">
-              <Nav.Link href="#home">ABOUT</Nav.Link>
-              <Nav.Link href="#features">FavCards</Nav.Link>
-              <Nav.Link href="#pricing">MY CARDS</Nav.Link>
-              <Nav.Link href="#pricing">SANDBOX</Nav.Link>
-            </Nav>
-          </Container>
+      <nav
+        className="navbar navbar-expand-lg bg-primary text-light"
+        data-bs-theme="dark"
+      >
+        <div className="container-fluid">
+          <NavLink
+            className="navbar-brand text-info text-light-emphasis"
+            to="/"
+          >
+            NEXCRM
+          </NavLink>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <>
+              <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                <li className="nav-item">
+                  <NavLink className="nav-link" aria-current="page" to="/about">
+                    ABOUT
+                  </NavLink>
+                </li>
+                {/* <li>
+                <NavLink className="nav-link" aria-current="page" to="/">
+                  ALL CARDS
+                </NavLink>
+              </li> */}
+                <li>
+                  <NavLink
+                    className="nav-link"
+                    aria-current="page"
+                    to="/favcards"
+                  >
+                    FAV CARDS
+                  </NavLink>
+                </li>
+                {currentUser?.isBusiness && (
+                  <li>
+                    <NavLink
+                      className="nav-link"
+                      aria-current="page"
+                      to="/mycards"
+                    >
+                      MY CARDS
+                    </NavLink>
+                  </li>
+                )}
+                {currentUser?.isAdmin && (
+                  <li>
+                    <NavLink
+                      className="nav-link"
+                      aria-current="page"
+                      to="/sandbox"
+                    >
+                      SANDBOX
+                    </NavLink>
+                  </li>
+                )}
+              </ul>
 
-          <Form>
-            <Row>
-              <Col xs="auto">
-                <Form.Control
-                  type="text"
+              <form className="d-flex" role="search">
+                <input
+                  className="form-control me-2 text-light"
+                  type="search"
                   placeholder="Search"
-                  className=" mr-sm-2"
-                  onClick={() => {}}
+                  aria-label="Search"
+                  // onClick={()=>{alert("Search functionality not implemented yet")}}
+                  onChange={() => {
+                    alert("Search functionality not implemented yet");
+                  }}
                 />
-              </Col>
-              {/* <Col xs="auto">
-            <Button type="submit">Submit</Button>
-          </Col> */}
-            </Row>
-          </Form>
-          <i className="fa-solid fa-sun ms-5"></i>
-          <i className="fa-solid fa-moon ms-3 mx-5"></i>
-          <img
-            src="https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg"
-            // src={currentUser?.image.url}
-            className="img-fluid rounded-top"
-            alt={currentUser?.image.alt}
-            style={{ height: "20px" }}
-          />
-          {console.log(currentUser?.image.url)}
-          
-        
-        </>
-      </Navbar>
+              </form>
+              {isDarkMode ? (
+                <i
+                  className="fa-solid fa-moon"
+                  onClick={() => handleDark()}
+                ></i>
+              ) : (
+                <i className="fa-solid fa-sun" onClick={() => handleDark()}></i>
+              )}
+
+              {/* <form className="d-flex" role="search">
+                <button
+                  className="btn btn-outline-info"
+                  type="submit"
+                  onClick={() => {
+                    navigate("/");
+                    localStorage.removeItem("userId");
+                  }}
+                >
+                  Logout
+                </button>
+              </form> */}
+            </>
+          </div>
+        </div>
+      </nav>
     </>
   );
 };

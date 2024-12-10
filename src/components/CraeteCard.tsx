@@ -24,7 +24,15 @@ const CraeteCard: FunctionComponent<CraeteCardProps> = ({ item, ind }) => {
     `${item.address.street} ${item.address.houseNumber}, ${item.address.city},  ${item.address.country}, ${item.address.zip}`
   ); //-
 
+  const [imgError, setImgError] = useState<boolean>(false);
+
   const { currentUser } = useContext(GlobalProps);
+
+   // Handle image error
+   const handleImageError = () => {
+    console.log("Image failed to load for item ID:", item._id);
+    setImgError(true); 
+  };
 
   return (
     <>
@@ -32,9 +40,10 @@ const CraeteCard: FunctionComponent<CraeteCardProps> = ({ item, ind }) => {
         <Card className="h-100">
           <Card.Img
             variant="top"
-            src={item.image.url}
+            src={imgError ? "/path/to/fallback-image.jpg" : item.image.url}
             alt={item.image.alt}
             className="image"
+            onError={handleImageError}
           />
           <Card.Body className="card-body">
             <Card.Title>{item.title}</Card.Title>

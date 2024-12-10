@@ -19,6 +19,10 @@ import {
 } from "./services/userServices";
 import { Jwt } from "./interfaces/Jwt";
 import { CardRecFull } from "./interfaces/Card";
+import About from "./components/About";
+import Mycards from "./components/Mycards";
+import Favcards from "./components/Favcards";
+import Sandbox from "./components/Sandbox";
 
 interface GlobalPropsType {
   isUserLogedin: boolean;
@@ -85,9 +89,10 @@ function App() {
       getUserDetail(jwtUser._id, localToken)
         .then((res) => {
           // test of user admin/business/regular
-          // console.log(res.data)
-          const userRec = { ...res.data, isAdmin: false, isBusiness: false };
+          const userRec = { ...res.data, isAdmin: true, isBusiness: true };
           setCurrentUser(userRec);
+          // setCurrentUser(res.data)
+
         })
         .catch((err) => {
           console.log(err);
@@ -104,11 +109,15 @@ function App() {
       <GlobalProps.Provider value={globalContextValue}>
         <div className="App">
           <>
-            <NavBar />
             <div className="container">
               <Router>
+                <NavBar />
                 <Routes>
                   <Route path="/" element={<Main />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/favcards" element={<Favcards />} />
+                  <Route path="/mycards" element={<Mycards />} />
+                  <Route path="/sandbox" element={<Sandbox />} />
 
                   <Route path="*" element={<PageNotFound />} />
                 </Routes>
