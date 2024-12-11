@@ -100,10 +100,10 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
                 <i
                   className="fa-solid fa-moon"
                   onClick={() => handleDark()}
-                  style={{ width: "10px", margin:"10px"}}
+                  style={{ width: "10px", margin:"10px", color: "black" }}
                 ></i>
               ) : (
-                <i className="fa-solid fa-sun" onClick={() => handleDark()} style={{ width: "10px", margin:"10px"}}></i>
+                <i className="fa-solid fa-sun" onClick={() => handleDark()} style={{ width: "10px", margin:"10px", color: "white"}}></i>
               )}
               <img
                 src={currentUser?.image.url}

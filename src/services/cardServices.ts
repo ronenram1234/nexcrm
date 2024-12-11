@@ -30,3 +30,18 @@ export function getAllCards(): Promise<AxiosResponse> {
     
   return axios.request(config);
 }
+
+
+export function setLikeDislike(cardId:string, token:string): Promise<AxiosResponse> {
+
+  let config = {
+    method: 'patch',
+    maxBodyLength: Infinity,
+    url: `${api}/${cardId}`,
+    
+    headers: { 'x-auth-token': token}
+  };
+  
+  return axios.request(config)
+
+}

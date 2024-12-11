@@ -7,15 +7,14 @@ import Col from "react-bootstrap/Col";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHeart,
-  
   faPenToSquare,
   faPhone,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import { faHeart as faRegularHeart } from '@fortawesome/free-regular-svg-icons';  // Regular heart icon
-
+import { faHeart as faRegularHeart } from "@fortawesome/free-regular-svg-icons"; // Regular heart icon
 
 import { GlobalProps } from "../App";
+import { setLikeDislike } from "../services/cardServices";
 
 interface CreateCardProps {
   item: CardRecFull;
@@ -23,20 +22,21 @@ interface CreateCardProps {
   screen: string;
 }
 
-//-
 const CreateCard: FunctionComponent<CreateCardProps> = ({
   item,
   ind,
   screen,
 }) => {
-  const [address, setddress] = useState<string>(
+  const { currentUser, token } = useContext(GlobalProps);
+  const [address, setAddress] = useState<string>(
     `${item.address.street} ${item.address.houseNumber}, ${item.address.city},  ${item.address.country}, ${item.address.zip}`
-  ); //-
+  );
 
   const [imgError, setImgError] = useState<boolean>(false);
-  const [isHeartSelected, setIsHeartSelected] = useState(false);
+  const [isHeartSelected, setIsHeartSelected] = useState(
+    item.likes?.includes(currentUser?._id || "") || false
+  );
 
-  const { currentUser } = useContext(GlobalProps);
 
   // Handle image error
   const handleImageError = () => {
@@ -44,9 +44,21 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
     setImgError(true);
   };
 
-  function handleHeartClick() {
-    setIsHeartSelected(!isHeartSelected);
-  }
+  const handleHeartClick = (id: string) => {
+    console.log("Card Id-", id);
+    console.log("Token-", token);
+    console.log("User ID-", currentUser?._id);
+
+    setLikeDislike(id, token)
+      .then(() => {
+        // Update heart state based on likes
+        setIsHeartSelected((prev) => !prev);
+        console.log("Success");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   useEffect(() => {
     if (isHeartSelected) {
@@ -73,7 +85,6 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
           </Card.Body>
           <ListGroup className="list-group-flush">
             <ListGroup.Item>phone: {item.phone}</ListGroup.Item>
-
             <ListGroup.Item>Address: {address}</ListGroup.Item>
             <ListGroup.Item>Card Number: {item._id}</ListGroup.Item>
           </ListGroup>
@@ -82,12 +93,12 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
             {isHeartSelected ? (
               <FontAwesomeIcon
                 icon={faHeart}
-                onClick={() => handleHeartClick()}
+                onClick={() => handleHeartClick(item._id)}
               />
             ) : (
               <FontAwesomeIcon
                 icon={faRegularHeart}
-                onClick={() => handleHeartClick()}
+                onClick={() => handleHeartClick(item._id)}
               />
             )}
 
