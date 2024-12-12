@@ -1,5 +1,6 @@
 import { FunctionComponent, useContext, useEffect, useState } from "react";
 import { CardRecFull } from "../interfaces/Card";
+import Modal from "react-bootstrap/Modal";
 
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
@@ -16,6 +17,8 @@ import { faHeart as faRegularHeart } from "@fortawesome/free-regular-svg-icons";
 import { GlobalProps } from "../App";
 import { setLikeDislike } from "../services/cardServices";
 import { clearScreenDown } from "readline";
+import CardDetails from "./CardDetails";
+import { useNavigate } from "react-router-dom";
 
 interface CreateCardProps {
   item: CardRecFull;
@@ -28,6 +31,7 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
   ind,
   originScreen,
 }) => {
+  const navigate = useNavigate();
   const { currentUser, token, cardArray, setCardArray } =
     useContext(GlobalProps);
   const [address, setAddress] = useState<string>(
@@ -55,19 +59,12 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
 
     setLikeDislike(id, token)
       .then((res) => {
-        // Update heart state based on likes
+        
         setIsHeartSelected((prev) => !prev);
 
-        // console.log("data.res -----", res.data);
+        
         let dbRec: CardRecFull = res.data;
-        // let cardAraycopy=cardArray
-        // console.log("likes -----", dbRec.likes);
-        // cardArray?.map((rec, ind) => {
-        //   if (item._id === rec._id ) {
-        //     console.log(cardArray[ind].likes);
-        //     if (cardAraycopy!==null)
-        //         cardAraycopy[ind].likes = dbRec.likes;
-        //     console.log(cardArray[ind].likes);
+        
         const updatedCardArray = cardArray?.map((rec) => {
           if (item._id === rec._id) {
             return { ...rec, likes: dbRec.likes };
@@ -76,8 +73,6 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
         }) || [];
         setCardArray(updatedCardArray);
 
-            
-            // setCardArray(cardAraycopy)
           })
         
 
@@ -87,13 +82,17 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
       });
   };
 
+  function handleCardClick(){
+    navigate(`/carddetails`, { state: { card: item } });
+
+  }
 
 
   return (
     <>
       {/* {console.log(item)} */}
-      <Col key={ind}>
-        <Card className="h-100">
+      <Col key={ind} >
+        <Card className="h-100" onClick={()=>handleCardClick()}>
           <Card.Img
             variant="top"
             src={imgError ? "/path/to/fallback-image.jpg" : item.image.url}
@@ -143,3 +142,5 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
 };
 
 export default CreateCard;
+
+
