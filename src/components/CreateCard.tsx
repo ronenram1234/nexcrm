@@ -61,7 +61,7 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
         // console.log("data.res -----", res.data);
         let dbRec: CardRecFull = res.data;
         // let cardAraycopy=cardArray
-        console.log("likes -----", dbRec.likes);
+        // console.log("likes -----", dbRec.likes);
         // cardArray?.map((rec, ind) => {
         //   if (item._id === rec._id ) {
         //     console.log(cardArray[ind].likes);

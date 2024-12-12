@@ -29,7 +29,7 @@ const CardsCarousel: FunctionComponent<CardsCarouselProps> = ({carouselCardArray
   };
 
   
-console.log("carsoule", carouselCardArray)
+// console.log("carsoule", carouselCardArray)
   const cardChunks = chunkCards(carouselCardArray || [], 10);
 
   return (

@@ -55,6 +55,18 @@ export const GlobalProps = createContext<GlobalPropsType>({
   setIsDarkMode: () => {},
 });
 
+export async function getAllCardsFromAPI(setCardArray: React.Dispatch<React.SetStateAction<CardRecFull[] | null>>) {
+  try {
+    const res = await getAllCards();
+
+    setCardArray(res.data);
+  } catch (err: any) {
+    console.log(err);
+    if (err.response) {
+      errorMsg(`Transaction Error - ${err.response}`);
+    }
+  }
+}
 
 function App() {
   const localToken = getTokenLocalStorage() || "";
@@ -107,26 +119,15 @@ function App() {
   }, [localToken]);
 
 
-  async function getAllCardsFromAPI() {
-    try {
-      const res = await getAllCards();
-
-      setCardArray(res.data);
-    } catch (err: any) {
-      console.log(err);
-      if (err.response) {
-        errorMsg(`Transaction Error - ${err.response}`);
-      }
-    }
-  }
+ 
 
   useEffect(() => {
-    console.log("----------------------------card array changed----------------------------");
-    console.log("length", cardArray?.length);
+    // console.log("----------------------------card array changed----------------------------");
+    // console.log("length", cardArray?.length);
     if (cardArray?.length === 0) {  // Check if cardArray has no items
     
   
-      getAllCardsFromAPI();
+      getAllCardsFromAPI(setCardArray);
     }
   }, [cardArray]);
 

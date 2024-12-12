@@ -21,12 +21,12 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
         cardArray.filter((item) => item.likes?.includes(currentUser._id))
       );
     }
-    console.log("cardarray changed");
+    // console.log("cardarray changed");
   },[cardArray]);
 
-  console.log(favCardAray?.length)
-  console.log(cardArray?.length)
-  console.log(currentUser?._id)
+//   console.log(favCardAray?.length)
+//   console.log(cardArray?.length)
+//   console.log(currentUser?._id)
 
   return (
     <>
