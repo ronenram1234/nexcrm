@@ -6,26 +6,31 @@ import ModalLoginReg from "./ModalLoginReg";
 
 import CreateCard from "./CreateCard";
 import { Carousel, Row, Tab, Tabs } from "react-bootstrap";
+import { Switch } from "@mui/material";
+import { CardRecFull } from "../interfaces/Card";
 
 
 interface CardsCarouselProps {
-  screen:string;
+  carouselCardArray:CardRecFull[];
+  originScreen:string
 }
 
-const CardsCarousel: FunctionComponent<CardsCarouselProps> = ({screen}) => {
-  const {  isUserLogedin, cardArray } =
+const CardsCarousel: FunctionComponent<CardsCarouselProps> = ({carouselCardArray,originScreen}) => {
+  const {  isUserLogedin } =
     useContext(GlobalProps);
   const [activeTab, setActiveTab] = useState<string>("Tab 1");
 
-  const chunkCards = (cards: any[], chunkSize: number) => {
+  const chunkCards = (carouselCardArray: CardRecFull[], chunkSize: number) => {
     const chunks = [];
-    for (let i = 0; i < cards.length; i += chunkSize) {
-      chunks.push(cards.slice(i, i + chunkSize));
+    for (let i = 0; i < carouselCardArray.length; i += chunkSize) {
+      chunks.push(carouselCardArray.slice(i, i + chunkSize));
     }
     return chunks;
   };
 
-  const cardChunks = chunkCards(cardArray || [], 10);
+  
+console.log("carsoule", carouselCardArray)
+  const cardChunks = chunkCards(carouselCardArray || [], 10);
 
   return (
     <div className="container mt-4">
@@ -48,7 +53,7 @@ const CardsCarousel: FunctionComponent<CardsCarouselProps> = ({screen}) => {
                 <Carousel.Item key={item._id || ind}>
                   <Row xs={1} sm={2} md={3} lg={4} className="g-4">
                     {chunk.map((card, cardIndex) => (
-                      <CreateCard item={card} ind={cardIndex} screen={screen}  key={`${card._id}-${cardIndex}`}/>
+                      <CreateCard item={card} ind={cardIndex} originScreen={originScreen}  key={`${card._id}-${cardIndex}`}/>
                     ))}
                   </Row>
                 </Carousel.Item>

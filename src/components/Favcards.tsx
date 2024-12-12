@@ -1,4 +1,4 @@
-import { FunctionComponent, useContext, useEffect } from "react";
+import { FunctionComponent, useContext, useEffect, useState } from "react";
 import { GlobalProps } from "../App";
 
 import { getAllCards } from "../services/cardServices";
@@ -10,42 +10,30 @@ import { CardRecFull } from "../interfaces/Card";
 interface FavCardsProps {}
 
 const FavCards: FunctionComponent<FavCardsProps> = () => {
-  const { setCardArray, currentUser } = useContext(GlobalProps);
+  const { setCardArray, currentUser, cardArray } = useContext(GlobalProps);
+  const [favCardAray, setFavCardAray] = useState<CardRecFull[] | null>([]);
 
-//   setCardArray([] as CardRecFull[]);
+  //   setCardArray([] as CardRecFull[]);
 
   useEffect(() => {
-    async function getAllFavCardsFromAPI() {
-      try {
-  
-        const res = await getAllCards();
-
-        if (currentUser !== null && currentUser._id!==undefined) {
-
-            const likeCards: CardRecFull[] = res.data.filter(
-            (card: CardRecFull) => card.likes?.includes(currentUser._id)
-          );
-        // console.log(likeCards)
-
-          setCardArray(likeCards);
-        }
-        else{
-            errorMsg("Error -User not logged in. Please log in to see your favorite cards. ")
-          }
-      } catch (err: any) {
-        console.log(err);
-        if (err.response) {
-          errorMsg(`Transaction Error - ${err.response}`);
-        }
-      }
+    if (cardArray !== null && cardArray.length > 0 && currentUser !== null) {
+      setFavCardAray(
+        cardArray.filter((item) => item.likes?.includes(currentUser._id))
+      );
     }
+    console.log("cardarray changed");
+  },[cardArray]);
 
-    getAllFavCardsFromAPI();
-  }, [currentUser]);
+  console.log(favCardAray?.length)
+  console.log(cardArray?.length)
+  console.log(currentUser?._id)
 
   return (
     <>
-      <CardsCarousel screen="FavCards" />
+      <CardsCarousel
+        carouselCardArray={favCardAray || []}
+        originScreen="FavCards"
+      />
     </>
   );
 };

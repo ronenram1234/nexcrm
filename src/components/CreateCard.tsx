@@ -20,26 +20,28 @@ import { clearScreenDown } from "readline";
 interface CreateCardProps {
   item: CardRecFull;
   ind: number;
-  screen: string;
+  originScreen: string;
 }
 
 const CreateCard: FunctionComponent<CreateCardProps> = ({
   item,
   ind,
-  screen,
+  originScreen,
 }) => {
-  const { currentUser, token,cardArray, setCardArray } = useContext(GlobalProps);
+  const { currentUser, token, cardArray, setCardArray } =
+    useContext(GlobalProps);
   const [address, setAddress] = useState<string>(
     `${item.address.street} ${item.address.houseNumber}, ${item.address.city},  ${item.address.country}, ${item.address.zip}`
   );
 
   const [imgError, setImgError] = useState<boolean>(false);
   const [isHeartSelected, setIsHeartSelected] = useState(
-    item.likes?.includes(currentUser?._id || "") 
+    item.likes?.includes(currentUser?._id || "")
   );
-  
+
   useEffect(() => {
-  setIsHeartSelected(item.likes?.includes(currentUser?._id || ""))},[]);
+    setIsHeartSelected(item.likes?.includes(currentUser?._id || ""));
+  }, [currentUser?._id, item.likes]);
 
   // Handle image error
   const handleImageError = () => {
@@ -52,32 +54,40 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
     // console.log("User ID-", currentUser?._id);
 
     setLikeDislike(id, token)
-      .then(() => {
+      .then((res) => {
         // Update heart state based on likes
         setIsHeartSelected((prev) => !prev);
-        // update array
-        console.log(cardArray?.find(i => i._id===item._id))
-        let t=cardArray?.find(i => i._id===item._id)
-        console.log(t)
-        currentUser!==null && t!==undefined && t.likes!==undefined && t.likes.push(currentUser._id)
-        console.log(t)
 
+        // console.log("data.res -----", res.data);
+        let dbRec: CardRecFull = res.data;
+        // let cardAraycopy=cardArray
+        console.log("likes -----", dbRec.likes);
+        // cardArray?.map((rec, ind) => {
+        //   if (item._id === rec._id ) {
+        //     console.log(cardArray[ind].likes);
+        //     if (cardAraycopy!==null)
+        //         cardAraycopy[ind].likes = dbRec.likes;
+        //     console.log(cardArray[ind].likes);
+        const updatedCardArray = cardArray?.map((rec) => {
+          if (item._id === rec._id) {
+            return { ...rec, likes: dbRec.likes };
+          }
+          return rec;
+        }) || [];
+        setCardArray(updatedCardArray);
 
-        change to get card from db and refresh it in array instead of logic abovd
+            
+            // setCardArray(cardAraycopy)
+          })
         
-      })
+
+      
       .catch((err) => {
         console.log(err);
       });
   };
 
-  // useEffect(() => {
-  //   if (isHeartSelected) {
-  //     console.log("Heart selected");
-  //   } else {
-  //     console.log("Heart not selected");
-  //   }
-  // }, [isHeartSelected]);
+
 
   return (
     <>
@@ -118,7 +128,7 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
               )}
 
               {(currentUser?.isAdmin ||
-                (currentUser?.isBusiness && screen === "Mycards")) && (
+                (currentUser?.isBusiness && originScreen === "Mycards")) && (
                 <>
                   <FontAwesomeIcon icon={faPenToSquare} />
                   <FontAwesomeIcon icon={faTrash} />

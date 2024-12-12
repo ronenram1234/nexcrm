@@ -9,7 +9,7 @@ import CardsCarousel from "./CardsCarousel";
 interface MainProps {}
 
 const Main: FunctionComponent<MainProps> = () => {
-  const { setCardArray } = useContext(GlobalProps);
+  const { setCardArray,cardArray } = useContext(GlobalProps);
 
   useEffect(() => {
     async function getAllCardsFromAPI() {
@@ -28,7 +28,7 @@ const Main: FunctionComponent<MainProps> = () => {
     getAllCardsFromAPI();
   }, [setCardArray]);
 
-  return <CardsCarousel screen="Main"/>;
+  return <CardsCarousel carouselCardArray={cardArray  || []} originScreen="Main"/>;
 };
 
 export default Main;

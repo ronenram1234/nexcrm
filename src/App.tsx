@@ -25,6 +25,8 @@ import Favcards from "./components/FavCards";
 import Sandbox from "./components/Sandbox";
 import FavCards from "./components/FavCards";
 import MyCards from "./components/MyCards";
+import { errorMsg } from "./services/feedbackService";
+import { getAllCards } from "./services/cardServices";
 
 interface GlobalPropsType {
   isUserLogedin: boolean;
@@ -103,6 +105,30 @@ function App() {
         });
     }
   }, [localToken]);
+
+
+  async function getAllCardsFromAPI() {
+    try {
+      const res = await getAllCards();
+
+      setCardArray(res.data);
+    } catch (err: any) {
+      console.log(err);
+      if (err.response) {
+        errorMsg(`Transaction Error - ${err.response}`);
+      }
+    }
+  }
+
+  useEffect(() => {
+    console.log("----------------------------card array changed----------------------------");
+    console.log("length", cardArray?.length);
+    if (cardArray?.length === 0) {  // Check if cardArray has no items
+    
+  
+      getAllCardsFromAPI();
+    }
+  }, [cardArray]);
 
   return (
     <>
