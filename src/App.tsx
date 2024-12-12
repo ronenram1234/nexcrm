@@ -20,9 +20,11 @@ import {
 import { Jwt } from "./interfaces/Jwt";
 import { CardRecFull } from "./interfaces/Card";
 import About from "./components/About";
-import Mycards from "./components/Mycards";
-import Favcards from "./components/Favcards";
+import Mycards from "./components/MyCards";
+import Favcards from "./components/FavCards";
 import Sandbox from "./components/Sandbox";
+import FavCards from "./components/FavCards";
+import MyCards from "./components/MyCards";
 
 interface GlobalPropsType {
   isUserLogedin: boolean;
@@ -51,8 +53,6 @@ export const GlobalProps = createContext<GlobalPropsType>({
   setIsDarkMode: () => {},
 });
 
-// https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark
-// dark and light mode implementation
 
 function App() {
   const localToken = getTokenLocalStorage() || "";
@@ -77,6 +77,7 @@ function App() {
     setCardArray,
     isDarkMode,
     setIsDarkMode,
+    
   };
 
   // check if user alreadt login before
@@ -115,8 +116,8 @@ function App() {
                 <Routes>
                   <Route path="/" element={<Main />} />
                   <Route path="/about" element={<About />} />
-                  <Route path="/favcards" element={<Favcards />} />
-                  <Route path="/mycards" element={<Mycards />} />
+                  <Route path="/favcards" element={<FavCards />} />
+                  <Route path="/mycards" element={<MyCards />} />
                   <Route path="/sandbox" element={<Sandbox />} />
 
                   <Route path="*" element={<PageNotFound />} />

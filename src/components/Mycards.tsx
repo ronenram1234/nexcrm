@@ -4,10 +4,10 @@ interface MycardsProps {
     
 }
  
-const Mycards: FunctionComponent<MycardsProps> = () => {
+const MyCards: FunctionComponent<MycardsProps> = () => {
     return ( <>
-    <h1>mycards</h1>
+    <h1>myCards</h1>
     </> );
 }
  
-export default Mycards;
+export default MyCards;

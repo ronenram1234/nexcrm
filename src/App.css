@@ -46,3 +46,19 @@ footer {
   border-top: 1px solid #ddd;
   margin-bottom: 1px; */
 }
+
+
+.custom-carousel .carousel-inner {
+  padding: 20px; 
+}
+
+.custom-carousel .carousel-control-prev,
+.custom-carousel .carousel-control-next {
+  z-index: 1; 
+  margin-left: 10px; 
+  margin-right: 10px; 
+}
+
+.custom-carousel .carousel-item {
+  padding-bottom: 50px; 
+}

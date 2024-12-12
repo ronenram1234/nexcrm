@@ -41,12 +41,14 @@ const CardsCarousel: FunctionComponent<CardsCarouselProps> = ({screen}) => {
             title={`Tab ${index + 1}`}
             key={index}
           >
-            <Carousel interval={null}  controls={false}>
+            <Carousel interval={null} className="custom-carousel" controls={false} >
+           
+            
               {chunk.map((item, ind) => (
-                <Carousel.Item key={ind}>
+                <Carousel.Item key={item._id || ind}>
                   <Row xs={1} sm={2} md={3} lg={4} className="g-4">
                     {chunk.map((card, cardIndex) => (
-                      <CreateCard item={card} ind={cardIndex} screen={screen}/>
+                      <CreateCard item={card} ind={cardIndex} screen={screen}  key={`${card._id}-${cardIndex}`}/>
                     ))}
                   </Row>
                 </Carousel.Item>
