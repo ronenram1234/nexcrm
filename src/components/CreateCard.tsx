@@ -59,40 +59,34 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
 
     setLikeDislike(id, token)
       .then((res) => {
-        
         setIsHeartSelected((prev) => !prev);
 
-        
         let dbRec: CardRecFull = res.data;
-        
-        const updatedCardArray = cardArray?.map((rec) => {
-          if (item._id === rec._id) {
-            return { ...rec, likes: dbRec.likes };
-          }
-          return rec;
-        }) || [];
+
+        const updatedCardArray =
+          cardArray?.map((rec) => {
+            if (item._id === rec._id) {
+              return { ...rec, likes: dbRec.likes };
+            }
+            return rec;
+          }) || [];
         setCardArray(updatedCardArray);
+      })
 
-          })
-        
-
-      
       .catch((err) => {
         console.log(err);
       });
   };
 
-  function handleCardClick(){
+  function handleCardClick() {
     navigate(`/carddetails`, { state: { card: item } });
-
   }
-
 
   return (
     <>
       {/* {console.log(item)} */}
-      <Col key={ind} >
-        <Card className="h-100" onClick={()=>handleCardClick()}>
+      <Col key={ind}>
+        <Card className="h-100">
           <Card.Img
             variant="top"
             src={imgError ? "/path/to/fallback-image.jpg" : item.image.url}
@@ -103,6 +97,7 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
           <Card.Body className="card-body">
             <Card.Title>{item.title}</Card.Title>
             <Card.Text>{item.description}</Card.Text>
+            <Card.Text></Card.Text>
           </Card.Body>
           <ListGroup className="list-group-flush">
             <ListGroup.Item>phone: {item.phone}</ListGroup.Item>
@@ -135,6 +130,16 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
               )}
             </>
           </Card.Body>
+          <Card.Footer>
+            <div className="d-flex justify-content-center">
+              <button
+                className="btn btn-info"
+                onClick={() => handleCardClick()}
+              >
+                Additional Details
+              </button>
+            </div>
+          </Card.Footer>
         </Card>
       </Col>
     </>
@@ -142,5 +147,3 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
 };
 
 export default CreateCard;
-
-
