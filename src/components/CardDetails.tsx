@@ -4,23 +4,22 @@ import {
   faPhone,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { FunctionComponent, useContext, useState } from "react";
-import Modal from "react-bootstrap/Modal";
+import { FunctionComponent,  useState } from "react";
+
 import { useLocation } from "react-router-dom";
-import { CardRecFull } from "../interfaces/Card";
+
 import { useNavigate } from "react-router-dom";
 import BussinessMap from "./BussinessMap";
 import { ToastContainer } from "react-toastify";
 
 interface CardDetailsProps {
-  // id:string
-  // card:CardRecFull;
+ 
 }
 
 const CardDetails: FunctionComponent<CardDetailsProps> = () => {
   const navigate = useNavigate();
 
-  const location = useLocation(); // Get the location object which contains the state
+  const location = useLocation(); 
   const card = location.state?.card;
   const [address, setAddress] = useState<string>( `${card.address.street}, ${card.address.city},
     ${card.address.state || ""} ${card.address.zip}
@@ -80,7 +79,7 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
           </div>
         </div>
         <>
-        {console.log(address)}
+        
             <BussinessMap address={address} />
             </>
       </div>

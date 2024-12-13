@@ -28,6 +28,8 @@ import MyCards from "./components/MyCards";
 import { errorMsg } from "./services/feedbackService";
 import { getAllCards } from "./services/cardServices";
 import CardDetails from "./components/CardDetails";
+import NewCard from "./components/NewEditCard";
+import NewEditCard from "./components/NewEditCard";
 
 interface GlobalPropsType {
   isUserLogedin: boolean;
@@ -150,6 +152,7 @@ function App() {
                   <Route path="/mycards" element={<MyCards />} />
                   <Route path="/sandbox" element={<Sandbox />} />
                   <Route path="/carddetails" element={<CardDetails />} />
+                  <Route path="/neweditcard" element={<NewEditCard />} />
 
                   <Route path="*" element={<PageNotFound />} />
                 </Routes>

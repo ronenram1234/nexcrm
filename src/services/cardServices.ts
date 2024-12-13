@@ -45,3 +45,8 @@ export function setLikeDislike(cardId:string, token:string): Promise<AxiosRespon
   return axios.request(config)
 
 }
+
+
+// export function updateCard(): Promise<AxiosResponse> {}
+export function updateCard(){}
+export function createNewCard(){}

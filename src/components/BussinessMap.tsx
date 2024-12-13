@@ -1,12 +1,11 @@
 import { FunctionComponent, useEffect, useState } from "react";
 import { getLatLon } from "../services/leafLetServices";
-import { errorMsg, successMsg } from "../services/feedbackService";
+import { errorMsg } from "../services/feedbackService";
 
 import { Marker, Popup } from "react-leaflet";
-import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 
-// import { TileLayer } from 'react-leaflet/TileLayer'
-// import { useMap } from 'react-leaflet/hooks'
+
 
 import { LatLngExpression } from "leaflet";
 
@@ -20,8 +19,7 @@ interface locationProps {
 }
 
 const BussinessMap: FunctionComponent<BussinessMapProps> = ({ address }) => {
-  //   const [lat, setLat] = useState("");
-  //   const [lon, setLon] = useState("");
+
 
   const [location, setLocation] = useState<locationProps | undefined>(
     undefined
@@ -32,14 +30,11 @@ const BussinessMap: FunctionComponent<BussinessMapProps> = ({ address }) => {
       .then((res) => {
         if (res.data.length > 0) {
           setLocation({
-            lat: parseFloat(res.data[0].lat), // Ensure it's a number
+            lat: parseFloat(res.data[0].lat), 
             lon: parseFloat(res.data[0].lon),
           });
 
-          console.log(location);
-        //   successMsg(
-        //     `Successfully fetched latitude and longitude for ${address}`
-        //   );
+     
         }
       })
       .catch((err) => {

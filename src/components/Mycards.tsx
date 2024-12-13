@@ -1,12 +1,38 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useContext, useEffect, useState } from "react";
+import { GlobalProps } from "../App";
+
+import CardsCarousel from "./CardsCarousel";
+import { CardRecFull } from "../interfaces/Card";
+import { useNavigate } from "react-router-dom";
 
 interface MycardsProps {
     
 }
  
 const MyCards: FunctionComponent<MycardsProps> = () => {
+
+  const {  currentUser, cardArray } = useContext(GlobalProps);
+  const [myCardArray, setMyCardArray] = useState<CardRecFull[] | null>([]);
+  const navigate = useNavigate();
+
+  //   setCardArray([] as CardRecFull[]);
+
+  useEffect(() => {
+    if (cardArray !== null && cardArray.length > 0 && currentUser !== null) {
+      setMyCardArray(
+        cardArray.filter((item) => (item.user_id ===currentUser._id))
+      );
+    }
+
+  },[cardArray]);
+
+    
     return ( <>
-    <h1>myCards</h1>
+    <CardsCarousel
+        carouselCardArray={myCardArray || []}
+        originScreen="FavCards"
+      />
+      <button className="btn btn-primary" onClick={()=>navigate(`/neweditcard`,{ state: { action: "New" } })}>Add New Card</button>
     </> );
 }
  
