@@ -26,7 +26,7 @@ const Register: FunctionComponent<RegisterProps> = ({ setIsRegister }) => {
       name: {
         first: "Daniel",
         middle: "",
-        last: "fefer",
+        last: "Daniel",
       },
       phone: "0516543424",
       email: "daniel@google.com",

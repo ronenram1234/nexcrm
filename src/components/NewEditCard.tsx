@@ -7,105 +7,401 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { createNewCard, updateCard } from "../services/cardServices";
 import { successMsg, errorMsg } from "../services/feedbackService";
 
-interface NewEditCardProps {
+interface NewEditCardProps {}
 
-   
-}
- 
 const NewEditCard: FunctionComponent<NewEditCardProps> = () => {
+  const location = useLocation();
+  const action = location.state?.action;
+  const { currentUser, cardArray } = useContext(GlobalProps);
 
-    const location = useLocation(); 
-    const action = location.state?.action;
-    const {  currentUser, cardArray } = useContext(GlobalProps);
+  const formik = useFormik({
+    initialValues: {
+      title: "Spolding and Sons Ltd.",
+      subtitle: "Garden building supplier",
+      description: "Our reputation for manufacturing and installing high-quality garden buildings continues to grow strong.Whether you’re looking for the perfect summer house to extend your outdoor living space, or you want a purpose built workshop, garage or just somewhere to keep your lawnmower, Spolding and Sons will work with you to build your dream garden buildings.",
+      phone: "+44 1246 912432",
+      email: "info@spoldingandsons.co.uk",
+      web: "https://spoldingandsons.co.uk/",
+      image: { url: "https://d2j6dbq0eux0bg.cloudfront.net/images/13579112/4407089951.webp", alt: "yard" },
+      address: {
+        state: "",
+        country: "United Kingdom",
+        city: "Chesterfield",
+        street: "Campbell Drive",
+        houseNumber: 0,
+        zip: "S43 2PR",
+      },
+    // initialValues: {
+    //   title: "",
+    //   subtitle: "",
+    //   description: "",
+    //   phone: "",
+    //   email: "",
+    //   web: "",
+    //   image: { url: "", alt: "" },
+    //   address: {
+    //     state: "",
+    //     country: "",
+    //     city: "",
+    //     street: "",
+    //     houseNumber: 0,
+    //     zip: "",
+    //   },
+      user_id: currentUser?._id || "",
+      createdAt: new Date().toISOString(),
+    },
+    validationSchema: yup.object({
+      title: yup.string().required("Title is required").min(2).max(256),
+      subtitle: yup.string().required("Sub title is required").min(2).max(256),
+      description: yup
+        .string()
+        .required("Description is required")
+        .min(2)
+        .max(1024),
+      phone: yup
+        .string()
+        .required("Phone is required")
+        .min(9)
+        .max(11)
+        .matches(/^\+?[0-9]{7,15}$/, "Invalid phone number"),
+      email: yup
+        .string()
+        .min(5)
+        .email("Invalid email address")
+        .required("Email is required"),
+      web: yup.string().min(14).url("Invalid URL"),
+      image: yup.object({
+        url: yup.string().min(14).url("Invalid URL"),
 
-    const formik = useFormik({
-        initialValues: {
-            _id: "",
-            title: "",
-            subtitle: "",
-            phone: "",
-            email: "",
-            web: "",
-            image: { url: "", alt: "" },
-            address: {
-                state: "",
-                country: "",
-                city: "",
-                street: "",
-                houseNumber: 0,
-                zip: 0,
-            },
-            user_id: currentUser?._id || "",
-            createdAt: new Date().toISOString(),
-        },
-        validationSchema: yup.object({
-            title: yup.string().required("Title is required").min(2).max(256),
-            subtitle: yup.string().min(2).max(256),
-            phone: yup
-                .string()
-                .required("Phone is required")
-                .min(9)
-                .max(15)
-                .matches(/^\+?[0-9]{7,15}$/, "Invalid phone number"),
-            email: yup
-                .string()
-                .email("Invalid email address")
-                .required("Email is required"),
-            web: yup.string().url("Invalid URL"),
-            image: yup.object({
-                url: yup
-                    .string()
-                    .url("Invalid URL")
-                    .required("Image URL is required"),
-                alt: yup.string().min(2).max(256),
-            }),
-            address: yup.object({
-                state: yup.string().min(2).max(256),
-                country: yup.string().required("Country is required").min(2).max(256),
-                city: yup.string().required("City is required").min(2).max(256),
-                street: yup
-                    .string()
-                    .required("Street is required")
-                    .min(2)
-                    .max(256),
-                houseNumber: yup
-                    .number()
-                    .required("House number is required")
-                    .min(1)
-                    .max(9999)
-                    .positive()
-                    .integer(),
-                zip: yup
-                    .number()
-                    .positive()
-                    .integer()
-                    .required("ZIP code is required")
-                    .min(2)
-                    .max(99999),
-            }),
-        }),
-        onSubmit: async (values) => {
-            try {
-                if (action === "edit") {
-                    const response = await updateCard();
-                    // successMsg("Card updated successfully!");
-                    // navigate("/cards");
-                } else {
-                    const response = await createNewCard();
-                    // successMsg("New card created successfully!");
-                    // navigate("/cards");
+        alt: yup.string().min(2).max(256),
+      }),
+      address: yup.object({
+        state: yup.string(),
+        country: yup.string().required("Country is required"),
+        city: yup.string().required("City is required"),
+        street: yup.string().required("Street is required"),
+
+        houseNumber: yup
+          .number()
+          .required("House number is required")
+          .positive()
+          .integer(),
+        zip: yup.string(),
+      }),
+    }),
+    onSubmit: async (values) => {
+      try {
+        if (action === "edit") {
+          const response = await updateCard();
+          // successMsg("Card updated successfully!");
+          // navigate("/cards");
+        } else {
+          const response = await createNewCard();
+          // successMsg("New card created successfully!");
+          // navigate("/cards");
+        }
+      } catch (err) {
+        errorMsg("Error processing the request.");
+        console.error(err);
+      }
+    },
+  });
+
+  return (
+    <>
+      <div className="container">
+        <div className="d-flex  align-items-center flex-column">
+          <h5 className="display-5 my-2">New Card</h5>
+        </div>
+        <form onSubmit={formik.handleSubmit}>
+          
+          <div className="d-flex justify-content-center align-item-center flex-row col-12 mt-4">
+            <div className="form-floating mx-3 col-6">
+              <TextField
+                variant="outlined"
+                label="Title*"
+                type="text"
+                name="title"
+                value={formik.values.title}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                fullWidth
+                error={formik.touched.title && Boolean(formik.errors.title)}
+                helperText={formik.touched.title && formik.errors.title}
+              />
+            </div>
+
+            <div className="form-floating mx-3 col-6">
+              <TextField
+                variant="outlined"
+                label="Subtitle*"
+                type="text"
+                name="subtitle"
+                value={formik.values.subtitle}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                fullWidth
+                error={
+                  formik.touched.subtitle && Boolean(formik.errors.subtitle)
                 }
-            } catch (err) {
-                errorMsg("Error processing the request.");
-                console.error(err);
-            }
-        },
-    });
-    
-    return ( <>
-    
-    <h1>action - {action}</h1>
-    </> );
-}
- 
+                helperText={formik.touched.subtitle && formik.errors.subtitle}
+              />
+            </div>
+          </div>
+          <div className="d-flex justify-content-center align-item-center flex-row col-12 mt-4">
+            <div className="form-floating mx-3 col-6 mt-4">
+              <TextField
+                variant="outlined"
+                label="Description*"
+                type="text"
+                name="description"
+                value={formik.values.description}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                fullWidth
+                error={
+                  formik.touched.description &&
+                  Boolean(formik.errors.description)
+                }
+                helperText={
+                  formik.touched.description && formik.errors.description
+                }
+              />
+            </div>
+
+          
+            <div className="form-floating mx-3 col-6 mt-4">
+              <TextField
+                variant="outlined"
+                label="Phone*"
+                type="text"
+                name="phone"
+                value={formik.values.phone}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                fullWidth
+                error={formik.touched.phone && Boolean(formik.errors.phone)}
+                helperText={formik.touched.phone && formik.errors.phone}
+              />
+            </div>
+          </div>
+
+          <div className="d-flex justify-content-center align-item-center flex-row col-12 mt-4">
+            <div className="form-floating mx-3 col-6 mt-4">
+              <TextField
+                variant="outlined"
+                label="Email*"
+                type="email"
+                name="email"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                fullWidth
+                error={formik.touched.email && Boolean(formik.errors.email)}
+                helperText={formik.touched.email && formik.errors.email}
+              />
+            </div>
+
+          
+            <div className="form-floating mx-3 col-6 mt-4">
+              <TextField
+                variant="outlined"
+                label="Web URL"
+                type="url"
+                name="web"
+                value={formik.values.web}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                fullWidth
+                error={formik.touched.web && Boolean(formik.errors.web)}
+                helperText={formik.touched.web && formik.errors.web}
+              />
+            </div>
+          </div>
+
+          <div className="d-flex justify-content-center align-item-center flex-row col-12 mt-4">
+            <div className="form-floating mx-3 col-6 mt-4">
+              <TextField
+                variant="outlined"
+                label="Image URL"
+                type="text"
+                name="url"
+                value={formik.values.image.url}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                fullWidth
+                error={
+                  formik.touched.image?.url && Boolean(formik.errors.image?.url)
+                }
+                helperText={
+                  formik.touched.image?.url && formik.errors.image?.url
+                }
+              />
+            </div>
+
+          
+            <div className="form-floating mx-3 col-6 mt-4">
+              <TextField
+                variant="outlined"
+                label="Image Alt"
+                type="text"
+                name="alt"
+                value={formik.values.image?.alt}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                fullWidth
+                error={
+                  formik.touched.image?.alt && Boolean(formik.errors.image?.alt)
+                }
+                helperText={
+                  formik.touched.image?.alt && formik.errors.image?.alt
+                }
+              />
+            </div>
+          </div>
+
+          
+          <div className="d-flex justify-content-center align-items-center flex-row col-12 mt-4">
+            <div className="form-floating mx-3 col-6">
+              <TextField
+                variant="outlined"
+                label="State"
+                type="text"
+                name="address.state"
+                value={formik.values.address.state}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                fullWidth
+              />
+            </div>
+
+            <div className="form-floating mx-3 col-6">
+              <TextField
+                variant="outlined"
+                label="Country*"
+                type="text"
+                name="address.country"
+                value={formik.values.address.country}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                fullWidth
+                error={
+                  formik.touched.address?.country &&
+                  Boolean(formik.errors.address?.country)
+                }
+                helperText={
+                  formik.touched.address?.country &&
+                  formik.errors.address?.country
+                }
+              />
+            </div>
+          </div>
+
+          <div className="d-flex justify-content-center align-items-center flex-row col-12 mt-4">
+            <div className="form-floating mx-3 col-6">
+              <TextField
+                variant="outlined"
+                label="City*"
+                type="text"
+                name="address.city"
+                value={formik.values.address.city}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                fullWidth
+                error={
+                  formik.touched.address?.city &&
+                  Boolean(formik.errors.address?.city)
+                }
+                helperText={
+                  formik.touched.address?.city && formik.errors.address?.city
+                }
+              />
+            </div>
+
+            <div className="form-floating mx-3 col-6">
+              <TextField
+                variant="outlined"
+                label="Street*"
+                type="text"
+                name="address.street"
+                value={formik.values.address.street}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                fullWidth
+                error={
+                  formik.touched.address?.street &&
+                  Boolean(formik.errors.address?.street)
+                }
+                helperText={
+                  formik.touched.address?.street &&
+                  formik.errors.address?.street
+                }
+              />
+            </div>
+          </div>
+
+          
+          <div className="d-flex justify-content-center align-item-center flex-row col-12 mt-4">
+            <div className="form-floating mx-3 col-6 mt-4">
+              <TextField
+                variant="outlined"
+                label="House Number*"
+                type="number"
+                name="address.houseNumber"
+                value={formik.values.address.houseNumber}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                fullWidth
+                error={
+                  formik.touched.address?.houseNumber &&
+                  Boolean(formik.errors.address?.houseNumber)
+                }
+                helperText={
+                  formik.touched.address?.houseNumber &&
+                  formik.errors.address?.houseNumber
+                }
+              />
+            </div>
+
+          
+            <div className="form-floating mx-3 col-6 mt-4">
+              <TextField
+                variant="outlined"
+                label="Zip Code"
+                type="text"
+                name="address.zip"
+                value={formik.values.address.zip}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                fullWidth
+                error={
+                  formik.touched.address?.zip &&
+                  Boolean(formik.errors.address?.zip)
+                }
+                helperText={
+                  formik.touched.address?.zip && formik.errors.address?.zip
+                }
+              />
+            </div>
+          </div>
+
+          
+          <div className="d-flex justify-content-center align-item-center flex-row col-12 mt-4">
+            <div className="mx-3 mt-4 col-6 ">
+              <button type="submit" className="btn btn-primary w-100">
+                Submit
+              </button>
+            </div>
+            <div className="mx-3 mt-4 col-6 ">
+              <button type="submit" className="btn btn-secondary w-100">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </>
+  );
+};
+
 export default NewEditCard;
