@@ -1,71 +1,79 @@
 import { FunctionComponent, useEffect, useState } from "react";
-import { getLatLon } from "../services/leafLetServices";
-import { errorMsg } from "../services/feedbackService";
 
-import { Marker, Popup } from "react-leaflet";
-import { MapContainer, TileLayer } from "react-leaflet";
-
-
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 
 import { LatLngExpression } from "leaflet";
+import { clearScreenDown } from "readline";
+import axios from "axios";
 
 interface BussinessMapProps {
   address: string;
 }
 
-interface locationProps {
-  lat: number;
-  lon: number;
-}
+
+const containerStyle = {
+  width: "100%",
+  height: "300px",
+};
+
+// const center = {
+//   lat: 37.7749, // San Francisco latitude
+//   lng: -122.4194, // San Francisco longitude
+// };
 
 const BussinessMap: FunctionComponent<BussinessMapProps> = ({ address }) => {
+  // const [location, setLocation] = useState<locationProps | undefined>(
+  //   undefined
+  // );
 
+  const [lat, setLat] = useState<number | undefined>(undefined);
+  const [lng, setLng] = useState<number | undefined>(undefined);
 
-  const [location, setLocation] = useState<locationProps | undefined>(
-    undefined
-  );
+  const [error, setError] = useState<string>("");
+
+  const apiKey = "AIzaSyCxEnj4F8H4Gu2hGfWH-sGPjhGNHwG_Un8";
 
   useEffect(() => {
-    getLatLon(address)
-      .then((res) => {
-        if (res.data.length > 0) {
-          setLocation({
-            lat: parseFloat(res.data[0].lat), 
-            lon: parseFloat(res.data[0].lon),
-          });
+    const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${apiKey}`;
+    async function geocodeAddress() {
+      try {
+        const response = await axios.get(geocodeUrl);
+        // console.log(address);
+        // console.log(geocodeUrl);
+        if (response.data.status === "OK") {
+          setLat(response.data.results[0].geometry.location.lat);
+          setLng(response.data.results[0].geometry.location.lng);
 
-     
+          setError("");
+        } else {
+          setError("Address not found. Please try again.");
         }
-      })
-      .catch((err) => {
-        const errorMessage = err.response ? err.response.data : err.message;
-        errorMsg(`Transaction Error - ${errorMessage}`);
-      });
+      } catch (err) {
+        setError("Error fetching address data");
+      }
+    }
+
+    geocodeAddress();
   }, [address]);
 
   return (
     <>
-    {console.log(location?.lat) }
-    {console.log(location?.lon) }
-      <div style={{ height: "20vh" }}>
-        {location && (
-          <MapContainer
-            center={[location.lat, location.lon] as LatLngExpression}
-            zoom={13}
-            style={{ width: "100%", height: "100%" }}
-          >
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
-            <Marker position={[location.lat, location.lon] as LatLngExpression}>
-              <Popup>{address}</Popup>
-            </Marker>
-          </MapContainer>
+      <div>
+        {error && <p style={{ color: "red" }}>{error}</p>}
 
-     
+        {lat !== undefined && lng !== undefined && (
+          <LoadScript googleMapsApiKey={apiKey}>
+            <GoogleMap
+              mapContainerStyle={containerStyle}
+              center={{ lat, lng }}
+              zoom={12}
+            >
+              <Marker position={{ lat, lng }} />
+            </GoogleMap>
+          </LoadScript>
         )}
       </div>
+      {/* {console.log("-------------------------------")} */}
     </>
   );
 };

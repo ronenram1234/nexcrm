@@ -4,7 +4,7 @@ import {
   faPhone,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { FunctionComponent,  useState } from "react";
+import { FunctionComponent, useState } from "react";
 
 import { useLocation } from "react-router-dom";
 
@@ -12,19 +12,17 @@ import { useNavigate } from "react-router-dom";
 import BussinessMap from "./BussinessMap";
 import { ToastContainer } from "react-toastify";
 
-interface CardDetailsProps {
- 
-}
+interface CardDetailsProps {}
 
 const CardDetails: FunctionComponent<CardDetailsProps> = () => {
   const navigate = useNavigate();
 
-  const location = useLocation(); 
+  const location = useLocation();
   const card = location.state?.card;
-  const [address, setAddress] = useState<string>( `${card.address.street}, ${card.address.city},
+  const [address, setAddress] =
+    useState<string>(`${card.address.street}, ${card.address.city},
     ${card.address.state || ""} ${card.address.zip}
     ${card.address.country}`);
-  
 
   return (
     <>
@@ -40,7 +38,7 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
                 style={{ maxWidth: "100%", height: "auto" }}
               />
             </div>
-            <div className="card-content col-5">
+            <div className="card-content col-5 ">
               <h3>{card.title}</h3>
               {card.subtitle && <h5>{card.subtitle}</h5>}
               {card.description && <p>{card.description}</p>}
@@ -65,8 +63,6 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
               </p>
               {card.bizNumber && <p>Business Number: {card.bizNumber}</p>}
 
-              
-
               <button
                 onClick={() => {
                   navigate(-1);
@@ -79,9 +75,10 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
           </div>
         </div>
         <>
-        
+          {/* <div className="container"> */}
             <BussinessMap address={address} />
-            </>
+          {/* </div> */}
+        </>
       </div>
     </>
   );
