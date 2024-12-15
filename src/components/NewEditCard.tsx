@@ -6,49 +6,54 @@ import { GlobalProps } from "../App";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createNewCard, updateCard } from "../services/cardServices";
 import { successMsg, errorMsg } from "../services/feedbackService";
+import { NewCard } from "../interfaces/Card";
 
 interface NewEditCardProps {}
 
 const NewEditCard: FunctionComponent<NewEditCardProps> = () => {
   const location = useLocation();
   const action = location.state?.action;
-  const { currentUser, cardArray } = useContext(GlobalProps);
+  const { currentUser, cardArray, token } = useContext(GlobalProps);
 
-  const formik = useFormik({
+  const formik = useFormik<NewCard>({
     initialValues: {
       title: "Spolding and Sons Ltd.",
       subtitle: "Garden building supplier",
-      description: "Our reputation for manufacturing and installing high-quality garden buildings continues to grow strong.Whether you’re looking for the perfect summer house to extend your outdoor living space, or you want a purpose built workshop, garage or just somewhere to keep your lawnmower, Spolding and Sons will work with you to build your dream garden buildings.",
-      phone: "+44 1246 912432",
+      description:
+        "Our reputation for manufacturing and installing high-quality garden buildings continues to grow strong.Whether you’re looking for the perfect summer house to extend your outdoor living space, or you want a purpose built workshop, garage or just somewhere to keep your lawnmower, Spolding and Sons will work with you to build your dream garden buildings.",
+      phone: "0502872545",
       email: "info@spoldingandsons.co.uk",
       web: "https://spoldingandsons.co.uk/",
-      image: { url: "https://d2j6dbq0eux0bg.cloudfront.net/images/13579112/4407089951.webp", alt: "yard" },
+      image: {
+        url: "https://d2j6dbq0eux0bg.cloudfront.net/images/13579112/4407089951.webp",
+        alt: "yard",
+      },
       address: {
         state: "",
         country: "United Kingdom",
         city: "Chesterfield",
         street: "Campbell Drive",
-        houseNumber: 0,
-        zip: "S43 2PR",
+        houseNumber: 10,
+        zip: 68443,
       },
-    // initialValues: {
-    //   title: "",
-    //   subtitle: "",
-    //   description: "",
-    //   phone: "",
-    //   email: "",
-    //   web: "",
-    //   image: { url: "", alt: "" },
-    //   address: {
-    //     state: "",
-    //     country: "",
-    //     city: "",
-    //     street: "",
-    //     houseNumber: 0,
-    //     zip: "",
-    //   },
+      // initialValues: {
+      //   title: "",
+      //   subtitle: "",
+      //   description: "",
+      //   phone: "",
+      //   email: "",
+      //   web: "",
+      //   image: { url: "", alt: "" },
+      //   address: {
+      //     state: "",
+      //     country: "",
+      //     city: "",
+      //     street: "",
+      //     houseNumber: 0,
+      //     zip: "",
+      //   },
       user_id: currentUser?._id || "",
-      createdAt: new Date().toISOString(),
+      
     },
     validationSchema: yup.object({
       title: yup.string().required("Title is required").min(2).max(256),
@@ -61,9 +66,10 @@ const NewEditCard: FunctionComponent<NewEditCardProps> = () => {
       phone: yup
         .string()
         .required("Phone is required")
+        // .matches(/^(05[0-9]{1})\d{6}$/, "Invalid phone number")
         .min(9)
-        .max(11)
-        .matches(/^\+?[0-9]{7,15}$/, "Invalid phone number"),
+        .max(11),
+
       email: yup
         .string()
         .min(5)
@@ -71,8 +77,7 @@ const NewEditCard: FunctionComponent<NewEditCardProps> = () => {
         .required("Email is required"),
       web: yup.string().min(14).url("Invalid URL"),
       image: yup.object({
-        url: yup.string().min(14).url("Invalid URL"),
-
+        url: yup.string().url("Invalid URL").min(14, "URL is too short"),
         alt: yup.string().min(2).max(256),
       }),
       address: yup.object({
@@ -90,19 +95,23 @@ const NewEditCard: FunctionComponent<NewEditCardProps> = () => {
       }),
     }),
     onSubmit: async (values) => {
-      try {
-        if (action === "edit") {
-          const response = await updateCard();
-          // successMsg("Card updated successfully!");
-          // navigate("/cards");
-        } else {
-          const response = await createNewCard();
-          // successMsg("New card created successfully!");
-          // navigate("/cards");
-        }
-      } catch (err) {
-        errorMsg("Error processing the request.");
-        console.error(err);
+      if (action === "edit") {
+        // const response = await updateCard();
+        // successMsg("Card updated successfully!");
+        // navigate("/cards");
+      } else {
+        console.log(values);
+        createNewCard(values, token)
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+            errorMsg(`Transaction Error - ${err.response.data}`);
+          });
+
+        // successMsg("New card created successfully!");
+        // navigate("/cards");
       }
     },
   });
@@ -114,7 +123,6 @@ const NewEditCard: FunctionComponent<NewEditCardProps> = () => {
           <h5 className="display-5 my-2">New Card</h5>
         </div>
         <form onSubmit={formik.handleSubmit}>
-          
           <div className="d-flex justify-content-center align-item-center flex-row col-12 mt-4">
             <div className="form-floating mx-3 col-6">
               <TextField
@@ -169,7 +177,6 @@ const NewEditCard: FunctionComponent<NewEditCardProps> = () => {
               />
             </div>
 
-          
             <div className="form-floating mx-3 col-6 mt-4">
               <TextField
                 variant="outlined"
@@ -202,7 +209,6 @@ const NewEditCard: FunctionComponent<NewEditCardProps> = () => {
               />
             </div>
 
-          
             <div className="form-floating mx-3 col-6 mt-4">
               <TextField
                 variant="outlined"
@@ -225,21 +231,23 @@ const NewEditCard: FunctionComponent<NewEditCardProps> = () => {
                 variant="outlined"
                 label="Image URL"
                 type="text"
-                name="url"
-                value={formik.values.image.url}
+                name="image.url"
+                value={formik.values.image?.url || ""}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 fullWidth
                 error={
-                  formik.touched.image?.url && Boolean(formik.errors.image?.url)
+                  formik.touched.image?.url === true &&
+                  Boolean(formik.errors.image?.url)
                 }
                 helperText={
-                  formik.touched.image?.url && formik.errors.image?.url
+                  formik.touched.image?.url === true
+                    ? formik.errors.image?.url
+                    : ""
                 }
               />
             </div>
 
-          
             <div className="form-floating mx-3 col-6 mt-4">
               <TextField
                 variant="outlined"
@@ -260,7 +268,6 @@ const NewEditCard: FunctionComponent<NewEditCardProps> = () => {
             </div>
           </div>
 
-          
           <div className="d-flex justify-content-center align-items-center flex-row col-12 mt-4">
             <div className="form-floating mx-3 col-6">
               <TextField
@@ -340,7 +347,6 @@ const NewEditCard: FunctionComponent<NewEditCardProps> = () => {
             </div>
           </div>
 
-          
           <div className="d-flex justify-content-center align-item-center flex-row col-12 mt-4">
             <div className="form-floating mx-3 col-6 mt-4">
               <TextField
@@ -363,7 +369,6 @@ const NewEditCard: FunctionComponent<NewEditCardProps> = () => {
               />
             </div>
 
-          
             <div className="form-floating mx-3 col-6 mt-4">
               <TextField
                 variant="outlined"
@@ -385,7 +390,6 @@ const NewEditCard: FunctionComponent<NewEditCardProps> = () => {
             </div>
           </div>
 
-          
           <div className="d-flex justify-content-center align-item-center flex-row col-12 mt-4">
             <div className="mx-3 mt-4 col-6 ">
               <button type="submit" className="btn btn-primary w-100">

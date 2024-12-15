@@ -33,8 +33,8 @@ export interface CardRecFull {
 
 // create new card
 interface NewImage {
-  url: string;
-  alt: string;
+  url?: string;
+  alt?: string;
   
 }
 
@@ -49,18 +49,18 @@ interface NewAddress {
 }
 
 export interface NewCard {
-  _id: string;
+  
   title: string;
   subtitle: string;
   description: string;
   phone: string;
   email: string;
   web?: string;
-  image?: NewImage;
+  image: NewImage;
   address: NewAddress;
   bizNumber?: number;
   likes?: string[];
   user_id: string;
-  createdAt: string;
+  
   
 }

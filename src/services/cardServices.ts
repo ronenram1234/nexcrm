@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { CardRecFull } from "../interfaces/Card";
+import { CardRecFull, NewCard } from "../interfaces/Card";
 
 const api: string = `${process.env.REACT_APP_API}/cards`;
 
@@ -49,4 +49,24 @@ export function setLikeDislike(cardId:string, token:string): Promise<AxiosRespon
 
 // export function updateCard(): Promise<AxiosResponse> {}
 export function updateCard(){}
-export function createNewCard(){}
+export function createNewCard(card:NewCard,token:string){
+
+  // let data = card;
+  console.log(token)
+  console.log(card)
+
+let config = {
+  method: 'post',
+  maxBodyLength: Infinity,
+  url: api,
+  headers: { 
+    'x-auth-token': token
+  },
+  data : card
+};
+
+console.log(config)
+
+  return axios.request(config);
+
+}

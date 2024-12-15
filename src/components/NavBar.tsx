@@ -100,16 +100,16 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
                 <i
                   className="fa-solid fa-moon"
                   onClick={() => handleDark()}
-                  style={{ width: "10px", margin:"10px", color: "black" }}
+                  style={{ width: "10px", margin:"10px", color: "black", }}
                 ></i>
               ) : (
                 <i className="fa-solid fa-sun" onClick={() => handleDark()} style={{ width: "10px", margin:"10px", color: "white"}}></i>
               )}
               <img
                 src={currentUser?.image.url}
-                className="img-fluid rounded-top"
+                className="img-fluid mx-3"
                 alt={currentUser?.image.alt}
-                style={{ width: "10px", margin:"10px"}}
+                style={{ width: "20px",  height: "20px",borderRadius: "50%"}}
               />
               
 
