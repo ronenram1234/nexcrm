@@ -123,6 +123,7 @@ const Register: FunctionComponent<RegisterProps> = ({ setIsRegister }) => {
             
             console.log("sucess ", res.data);
             successMsg("Registration complete sucessfuly")
+            setIsRegister(false)
             
           }
         )
