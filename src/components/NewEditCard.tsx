@@ -13,7 +13,7 @@ interface NewEditCardProps {}
 const NewEditCard: FunctionComponent<NewEditCardProps> = () => {
   const location = useLocation();
   const action = location.state?.action;
-  const { currentUser, cardArray, setCardArray, token } = useContext(GlobalProps);
+  const { currentUser, cardArray, setCardArray, token, myCardsInterface } = useContext(GlobalProps);
   let localCardArray:CardRecFull[]=[]
 
   const formik = useFormik<NewCard>({

@@ -31,6 +31,7 @@ import CardDetails from "./components/CardDetails";
 import NewCard from "./components/NewEditCard";
 import NewEditCard from "./components/NewEditCard";
 import { ToastContainer } from "react-toastify";
+import { MyCardInterface } from "./interfaces/MyCardInterface";
 
 interface GlobalPropsType {
   isUserLogedin: boolean;
@@ -44,6 +45,8 @@ interface GlobalPropsType {
 
   isDarkMode: boolean;
   setIsDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
+  myCardsInterface: MyCardInterface;
+  setMyCardsInterface: React.Dispatch<React.SetStateAction<MyCardInterface>>;
 }
 export const GlobalProps = createContext<GlobalPropsType>({
   isUserLogedin: false,
@@ -57,9 +60,16 @@ export const GlobalProps = createContext<GlobalPropsType>({
 
   isDarkMode: false,
   setIsDarkMode: () => {},
+  myCardsInterface: {
+    shouldFormiqInit: false,
+    sourceCardId: "",
+  },
+  setMyCardsInterface: () => {},
 });
 
-export async function getAllCardsFromAPI(setCardArray: React.Dispatch<React.SetStateAction<CardRecFull[] | null>>) {
+export async function getAllCardsFromAPI(
+  setCardArray: React.Dispatch<React.SetStateAction<CardRecFull[] | null>>
+) {
   try {
     const res = await getAllCards();
 
@@ -83,6 +93,10 @@ function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [cardArray, setCardArray] = useState<CardRecFull[] | null>([]);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [myCardsInterface, setMyCardsInterface] = useState<MyCardInterface>({
+    shouldFormiqInit: false,
+    sourceCardId: "",
+  });
 
   const globalContextValue = {
     isUserLogedin,
@@ -95,7 +109,8 @@ function App() {
     setCardArray,
     isDarkMode,
     setIsDarkMode,
-    
+    myCardsInterface,
+    setMyCardsInterface,
   };
 
   // check if user alreadt login before
@@ -111,7 +126,6 @@ function App() {
           const userRec = { ...res.data, isAdmin: false, isBusiness: true };
           setCurrentUser(userRec);
           // setCurrentUser(res.data)
-
         })
         .catch((err) => {
           console.log(err);
@@ -122,23 +136,18 @@ function App() {
     }
   }, [localToken]);
 
-
- 
-
   useEffect(() => {
     // console.log("----------------------------card array changed----------------------------");
     // console.log("length", cardArray?.length);
-    if (cardArray?.length === 0) {  // Check if cardArray has no items
-    
-  
+    if (cardArray?.length === 0) {
+      // Check if cardArray has no items
+
       getAllCardsFromAPI(setCardArray);
     }
   }, [cardArray]);
 
   return (
     <>
-
-    
       <ToastContainer />
       <GlobalProps.Provider value={globalContextValue}>
         <div className="App">

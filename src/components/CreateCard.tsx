@@ -79,7 +79,7 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
       });
   };
 
-  let indD: number = 0;
+  
 
   function handleTrashClick(bizNumber: number, token: string, cardId: string) {
     deleteCard(bizNumber, token, cardId)
