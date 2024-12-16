@@ -80,13 +80,11 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
       });
   };
 
-  
-
   function handleTrashClick(bizNumber: number, token: string, cardId: string) {
     deleteCard(bizNumber, token, cardId)
       .then((res) => {
         successMsg("Card deleted successfully!");
-        
+
         if (cardArray !== null)
           setCardArray(cardArray.filter((card) => card._id !== cardId));
       })
@@ -97,19 +95,11 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
   }
 
   function handleEditClick(item: CardRecFull) {
-
-    navigate(`/neweditcard`,{ state: { action: "update", item:item } })
-
-    
+    navigate(`/neweditcard`, { state: { action: "update", item: item } });
   }
   function handleNewFromCurrentClick(item: CardRecFull) {
-
-    navigate(`/neweditcard`,{ state: { action: "newFromExist", item:item } })
-
-    
+    navigate(`/neweditcard`, { state: { action: "newFromExist", item: item } });
   }
-
-  
 
   function handleCardClick() {
     navigate(`/carddetails`, { state: { card: item } });
@@ -117,8 +107,6 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
 
   return (
     <>
-      
-
       <Col key={ind}>
         <Card className="h-100">
           <Card.Img
@@ -140,40 +128,52 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
           </ListGroup>
           <Card.Body className="icons">
             <>
-              <FontAwesomeIcon icon={faPhone} />
+              <FontAwesomeIcon icon={faPhone} 
+              title="Call Number - will ve develop in the future"/>
 
               {/* {console.log(isHeartSelected)} */}
               {isHeartSelected ? (
                 <FontAwesomeIcon
                   icon={faHeart}
                   onClick={() => handleHeartClick(item._id)}
+                  title="Likes/Dislike"
                 />
               ) : (
                 <FontAwesomeIcon
                   icon={faRegularHeart}
                   onClick={() => handleHeartClick(item._id)}
+                  title="Likes/Dislike"
                 />
               )}
 
               {(currentUser?.isAdmin ||
                 (currentUser?.isBusiness && originScreen === "Mycards")) && (
                 <>
-                  <FontAwesomeIcon icon={faPenToSquare} onClick={() => {
-                      if (item.bizNumber !== undefined)
-                        handleEditClick(item);
-                    }}/>
-                    
-                  <FontAwesomeIcon icon={faCopy} onClick={() => {
+                  <FontAwesomeIcon
+                    icon={faPenToSquare}
+                    onClick={() => {
+                      if (item.bizNumber !== undefined) handleEditClick(item);
+                    }}
+                    title="Edit card"
+                  />
+
+                  <FontAwesomeIcon
+                    icon={faCopy}
+                    onClick={() => {
                       if (item.bizNumber !== undefined)
                         handleNewFromCurrentClick(item);
-                    }}/>
+                    }}
+                    title="Copy card to create new one"
+                  />
 
                   <FontAwesomeIcon
                     icon={faTrash}
                     onClick={() => {
                       if (item.bizNumber !== undefined)
                         handleTrashClick(item.bizNumber, token, item._id);
-                    }} />
+                    }}
+                    title="Delete card"
+                  />
                 </>
               )}
             </>
