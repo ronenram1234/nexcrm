@@ -15,10 +15,11 @@ import {
 import { faHeart as faRegularHeart } from "@fortawesome/free-regular-svg-icons"; // Regular heart icon
 
 import { GlobalProps } from "../App";
-import { setLikeDislike } from "../services/cardServices";
+import { deleteCard, setLikeDislike } from "../services/cardServices";
 import { clearScreenDown } from "readline";
 import CardDetails from "./CardDetails";
 import { useNavigate } from "react-router-dom";
+import { errorMsg, successMsg } from "../services/feedbackService";
 
 interface CreateCardProps {
   item: CardRecFull;
@@ -78,13 +79,30 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
       });
   };
 
+  let indD: number = 0;
+
+  function handleTrashClick(bizNumber: number, token: string, cardId: string) {
+    deleteCard(bizNumber, token, cardId)
+      .then((res) => {
+        successMsg("Card deleted successfully!");
+        
+        if (cardArray !== null)
+          setCardArray(cardArray.filter((card) => card._id !== cardId));
+      })
+      .catch((error) => {
+        errorMsg("Error deleting");
+        console.log(error);
+      });
+  }
+
   function handleCardClick() {
     navigate(`/carddetails`, { state: { card: item } });
   }
 
   return (
     <>
-      {/* {console.log(item)} */}
+      
+
       <Col key={ind}>
         <Card className="h-100">
           <Card.Img
@@ -125,7 +143,14 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
                 (currentUser?.isBusiness && originScreen === "Mycards")) && (
                 <>
                   <FontAwesomeIcon icon={faPenToSquare} />
-                  <FontAwesomeIcon icon={faTrash} />
+
+                  <FontAwesomeIcon
+                    icon={faTrash}
+                    onClick={() => {
+                      if (item.bizNumber !== undefined)
+                        handleTrashClick(item.bizNumber, token, item._id);
+                    }}
+                  />
                 </>
               )}
             </>

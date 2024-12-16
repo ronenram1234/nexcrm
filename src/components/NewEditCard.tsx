@@ -6,14 +6,15 @@ import { GlobalProps } from "../App";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createNewCard, updateCard } from "../services/cardServices";
 import { successMsg, errorMsg } from "../services/feedbackService";
-import { NewCard } from "../interfaces/Card";
+import { CardRecFull, NewCard } from "../interfaces/Card";
 
 interface NewEditCardProps {}
 
 const NewEditCard: FunctionComponent<NewEditCardProps> = () => {
   const location = useLocation();
   const action = location.state?.action;
-  const { currentUser, cardArray, token } = useContext(GlobalProps);
+  const { currentUser, cardArray, setCardArray, token } = useContext(GlobalProps);
+  let localCardArray:CardRecFull[]=[]
 
   const formik = useFormik<NewCard>({
     initialValues: {
@@ -25,7 +26,7 @@ const NewEditCard: FunctionComponent<NewEditCardProps> = () => {
       email: "info@spoldingandsons.co.uk",
       web: "https://spoldingandsons.co.uk/",
       image: {
-        url: "https://d2j6dbq0eux0bg.cloudfront.net/images/13579112/4407089951.webp",
+        url: "https://plus.unsplash.com/premium_photo-1673141390230-8b4a3c3152b1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Z2FyZGVufGVufDB8fDB8fHww",
         alt: "yard",
       },
       address: {
@@ -100,10 +101,15 @@ const NewEditCard: FunctionComponent<NewEditCardProps> = () => {
         // successMsg("Card updated successfully!");
         // navigate("/cards");
       } else {
-        console.log(values);
+        // console.log(values);
         createNewCard(values, token)
           .then((res) => {
             console.log(res.data);
+            
+            if (cardArray!==null)
+             localCardArray = [...cardArray];
+            localCardArray.push(res.data);
+            setCardArray(localCardArray);
           })
           .catch((err) => {
             console.log(err);

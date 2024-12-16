@@ -49,7 +49,8 @@ export function setLikeDislike(cardId:string, token:string): Promise<AxiosRespon
 
 // export function updateCard(): Promise<AxiosResponse> {}
 export function updateCard(){}
-export function createNewCard(card:NewCard,token:string){
+export function createNewCard(card:NewCard,token:string):Promise<AxiosResponse>
+{
 
   // let data = card;
   console.log(token)
@@ -68,5 +69,26 @@ let config = {
 console.log(config)
 
   return axios.request(config);
+
+}
+
+export function deleteCard(bizNumber:number,token:string,cardId:string):Promise<AxiosResponse>
+{
+  console.log(bizNumber)
+  
+  let data = {"bizNumber": bizNumber };
+
+let config = {
+  method: 'delete',
+  maxBodyLength: Infinity,
+  url:  `${api}/${cardId}`,
+  headers: { 
+    'x-auth-token': token
+  },
+  data : data
+};
+
+return axios.request(config)
+
 
 }

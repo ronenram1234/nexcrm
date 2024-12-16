@@ -30,6 +30,7 @@ import { getAllCards } from "./services/cardServices";
 import CardDetails from "./components/CardDetails";
 import NewCard from "./components/NewEditCard";
 import NewEditCard from "./components/NewEditCard";
+import { ToastContainer } from "react-toastify";
 
 interface GlobalPropsType {
   isUserLogedin: boolean;
@@ -138,7 +139,7 @@ function App() {
     <>
 
     
-      {/* <ToastContainer /> */}
+      <ToastContainer />
       <GlobalProps.Provider value={globalContextValue}>
         <div className="App">
           <>

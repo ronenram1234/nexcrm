@@ -30,7 +30,7 @@ const MyCards: FunctionComponent<MycardsProps> = () => {
     return ( <>
     <CardsCarousel
         carouselCardArray={myCardArray || []}
-        originScreen="FavCards"
+        originScreen="Mycards"
       />
       <button className="btn btn-primary" onClick={()=>navigate(`/neweditcard`,{ state: { action: "New" } })}>Add New Card</button>
     </> );

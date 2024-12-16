@@ -7,7 +7,8 @@ import { Margin } from "@mui/icons-material";
 interface NavBarProps {}
 
 const NavBar: FunctionComponent<NavBarProps> = () => {
-  const { currentUser, isDarkMode, setIsDarkMode,setIsUsserLogedin } = useContext(GlobalProps);
+  const { currentUser, isDarkMode, setIsDarkMode, setIsUsserLogedin } =
+    useContext(GlobalProps);
 
   const navigate: NavigateFunction = useNavigate();
   function handleDark() {
@@ -25,7 +26,7 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
             className="navbar-brand text-info text-light-emphasis"
             to="/"
           >
-            NEXCRM
+            <div title="View all cards">NEXCRM</div>
           </NavLink>
           <button
             className="navbar-toggler"
@@ -100,18 +101,21 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
                 <i
                   className="fa-solid fa-moon"
                   onClick={() => handleDark()}
-                  style={{ width: "10px", margin:"10px", color: "black", }}
+                  style={{ width: "10px", margin: "10px", color: "black" }}
                 ></i>
               ) : (
-                <i className="fa-solid fa-sun" onClick={() => handleDark()} style={{ width: "10px", margin:"10px", color: "white"}}></i>
+                <i
+                  className="fa-solid fa-sun"
+                  onClick={() => handleDark()}
+                  style={{ width: "10px", margin: "10px", color: "white" }}
+                ></i>
               )}
               <img
                 src={currentUser?.image.url}
                 className="img-fluid mx-3"
                 alt={currentUser?.image.alt}
-                style={{ width: "20px",  height: "20px",borderRadius: "50%"}}
+                style={{ width: "20px", height: "20px", borderRadius: "50%" }}
               />
-              
 
               <form className="d-flex" role="search">
                 <button
@@ -119,7 +123,7 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
                   type="submit"
                   onClick={() => {
                     localStorage.removeItem("crmUserId");
-                    setIsUsserLogedin(false)
+                    setIsUsserLogedin(false);
                     navigate("/");
                   }}
                 >

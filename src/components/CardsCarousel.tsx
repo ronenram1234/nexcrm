@@ -1,4 +1,4 @@
-import { FunctionComponent, useContext,  useState } from "react";
+import { FunctionComponent, useContext,  useEffect,  useState } from "react";
 import { GlobalProps } from "../App";
 
 import ModalLoginReg from "./ModalLoginReg";
@@ -19,18 +19,25 @@ const CardsCarousel: FunctionComponent<CardsCarouselProps> = ({carouselCardArray
   const {  isUserLogedin } =
     useContext(GlobalProps);
   const [activeTab, setActiveTab] = useState<string>("Tab 1");
+  const [chunksArr, setChunksArr] = useState<any[]>([]);
 
-  const chunkCards = (carouselCardArray: CardRecFull[], chunkSize: number) => {
-    const chunks = [];
-    for (let i = 0; i < carouselCardArray.length; i += chunkSize) {
+  function chunkCards (carouselCardArray: CardRecFull[], chunkSize: number):CardRecFull[] {
+    const chunks:any = [];
+    // console.log("1",carouselCardArray)
+      for (let i = 0; i < carouselCardArray.length; i += chunkSize) {
       chunks.push(carouselCardArray.slice(i, i + chunkSize));
     }
     return chunks;
-  };
+  }
 
-  
+  let cardChunks:any=[]
+
 // console.log("carsoule", carouselCardArray)
-  const cardChunks = chunkCards(carouselCardArray || [], 10);
+useEffect(() => {
+  cardChunks = chunkCards(carouselCardArray || [], 10);
+  setChunksArr(cardChunks); 
+  // console.log("2",carouselCardArray)
+},[carouselCardArray])
 
   return (
     <div className="container mt-4">
@@ -40,7 +47,7 @@ const CardsCarousel: FunctionComponent<CardsCarouselProps> = ({carouselCardArray
         onSelect={(k) => setActiveTab(k || "Tab 1")}
         className="mb-3"
       >
-        {cardChunks.map((chunk, index) => (
+        {chunksArr.map((chunk:CardRecFull[], index:number) => (
           <Tab
             eventKey={`Tab ${index + 1}`}
             title={`Tab ${index + 1}`}

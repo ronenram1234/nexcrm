@@ -15,7 +15,6 @@ interface Address {
 }
 
 export interface CardRecFull {
-  _id: string;
   title: string;
   subtitle?: string;
   description?: string;
@@ -29,6 +28,8 @@ export interface CardRecFull {
   user_id: string;
   createdAt: string;
   __v?: number;
+  _id: string;
+  
 }
 
 // create new card
