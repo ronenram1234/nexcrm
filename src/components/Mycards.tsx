@@ -32,7 +32,7 @@ const MyCards: FunctionComponent<MycardsProps> = () => {
         carouselCardArray={myCardArray || []}
         originScreen="Mycards"
       />
-      <button className="btn btn-primary" onClick={()=>navigate(`/neweditcard`,{ state: { action: "New" } })}>Add New Card</button>
+      <button className="btn btn-primary" onClick={()=>navigate(`/neweditcard`,{ state: { action: "new" } })}>Add New Card</button>
     </> );
 }
  

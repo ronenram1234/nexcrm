@@ -7,6 +7,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Col from "react-bootstrap/Col";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faCopy,
   faHeart,
   faPenToSquare,
   faPhone,
@@ -95,6 +96,21 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
       });
   }
 
+  function handleEditClick(item: CardRecFull) {
+
+    navigate(`/neweditcard`,{ state: { action: "update", item:item } })
+
+    
+  }
+  function handleNewFromCurrentClick(item: CardRecFull) {
+
+    navigate(`/neweditcard`,{ state: { action: "newFromExist", item:item } })
+
+    
+  }
+
+  
+
   function handleCardClick() {
     navigate(`/carddetails`, { state: { card: item } });
   }
@@ -142,15 +158,22 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
               {(currentUser?.isAdmin ||
                 (currentUser?.isBusiness && originScreen === "Mycards")) && (
                 <>
-                  <FontAwesomeIcon icon={faPenToSquare} />
+                  <FontAwesomeIcon icon={faPenToSquare} onClick={() => {
+                      if (item.bizNumber !== undefined)
+                        handleEditClick(item);
+                    }}/>
+                    
+                  <FontAwesomeIcon icon={faCopy} onClick={() => {
+                      if (item.bizNumber !== undefined)
+                        handleNewFromCurrentClick(item);
+                    }}/>
 
                   <FontAwesomeIcon
                     icon={faTrash}
                     onClick={() => {
                       if (item.bizNumber !== undefined)
                         handleTrashClick(item.bizNumber, token, item._id);
-                    }}
-                  />
+                    }} />
                 </>
               )}
             </>

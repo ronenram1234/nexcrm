@@ -3,7 +3,7 @@ import { CardRecFull, NewCard } from "../interfaces/Card";
 
 const api: string = `${process.env.REACT_APP_API}/cards`;
 
-export function createCart(cardID: string): Promise<AxiosResponse> {
+export function createCard(cardID: string): Promise<AxiosResponse> {
   return axios.post(api, { cardID, products: [], active: true });
 }
 
@@ -32,6 +32,8 @@ export function getAllCards(): Promise<AxiosResponse> {
 }
 
 
+
+
 export function setLikeDislike(cardId:string, token:string): Promise<AxiosResponse> {
 
   let config = {
@@ -48,7 +50,27 @@ export function setLikeDislike(cardId:string, token:string): Promise<AxiosRespon
 
 
 // export function updateCard(): Promise<AxiosResponse> {}
-export function updateCard(){}
+export function updateCard(card:NewCard,token:string,cardId:string):Promise<AxiosResponse>
+{
+
+  let data = card;
+
+  let config = {
+    method: 'put',
+    maxBodyLength: Infinity,
+    url: `${api}/${cardId}`,
+    headers: { 
+      'x-auth-token': token
+    },
+    data : data
+  };
+  console.log(card)
+  console.log(config.url)
+  console.log(token)
+  
+  return axios.request(config)
+
+}
 export function createNewCard(card:NewCard,token:string):Promise<AxiosResponse>
 {
 

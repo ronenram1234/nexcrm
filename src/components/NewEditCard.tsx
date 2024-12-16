@@ -1,5 +1,5 @@
-import { FunctionComponent, useState, useContext } from "react";
-import { useFormik } from "formik";
+import { FunctionComponent, useState, useContext, useEffect } from "react";
+import { isEmptyArray, useFormik } from "formik";
 import * as yup from "yup";
 import TextField from "@mui/material/TextField";
 import { GlobalProps } from "../App";
@@ -13,49 +13,88 @@ interface NewEditCardProps {}
 const NewEditCard: FunctionComponent<NewEditCardProps> = () => {
   const location = useLocation();
   const action = location.state?.action;
-  const { currentUser, cardArray, setCardArray, token, myCardsInterface } = useContext(GlobalProps);
-  let localCardArray:CardRecFull[]=[]
+  const item = location.state?.item;
+  const navigate = useNavigate();
 
-  const formik = useFormik<NewCard>({
-    initialValues: {
-      title: "Spolding and Sons Ltd.",
-      subtitle: "Garden building supplier",
-      description:
-        "Our reputation for manufacturing and installing high-quality garden buildings continues to grow strong.Whether you’re looking for the perfect summer house to extend your outdoor living space, or you want a purpose built workshop, garage or just somewhere to keep your lawnmower, Spolding and Sons will work with you to build your dream garden buildings.",
-      phone: "0502872545",
-      email: "info@spoldingandsons.co.uk",
-      web: "https://spoldingandsons.co.uk/",
+  const [initialCard, setInitialCard] = useState<CardRecFull | null>(null);
+  const { currentUser, cardArray, setCardArray, token } =
+    useContext(GlobalProps);
+  let localCardArray: CardRecFull[] = cardArray !== null ? [...cardArray] : [];
+
+  // intialvalue will be filled according to calling action
+  //  New - empty values
+  //  update - values will be filled according to "item" from location.state
+  //  new from exist record same as update but it will post new card to db
+
+  let initialValues: NewCard = {
+    title: "",
+    subtitle: "",
+    description: "",
+    phone: "",
+    email: "",
+    web: "",
+    image: { url: "", alt: "" },
+    address: {
+      state: "",
+      country: "",
+      city: "",
+      street: "",
+      houseNumber: 0,
+      zip: 0,
+    },
+    user_id: currentUser?._id || "",
+  };
+
+  // Determine initial values based on action type
+  if (action === "update" && item) {
+    initialValues = {
+      title: item.title,
+      subtitle: item.subtitle || "",
+      description: item.description || "",
+      phone: item.phone,
+      email: item.email,
+      web: item.web || "",
       image: {
-        url: "https://plus.unsplash.com/premium_photo-1673141390230-8b4a3c3152b1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Z2FyZGVufGVufDB8fDB8fHww",
-        alt: "yard",
+        url: item.image.url,
+        alt: item.image.alt,
       },
       address: {
-        state: "",
-        country: "United Kingdom",
-        city: "Chesterfield",
-        street: "Campbell Drive",
-        houseNumber: 10,
-        zip: 68443,
+        state: item.address.state || "",
+        country: item.address.country,
+        city: item.address.city,
+        street: item.address.street,
+        houseNumber: item.address.houseNumber,
+        zip: item.address.zip || "",
       },
-      // initialValues: {
-      //   title: "",
-      //   subtitle: "",
-      //   description: "",
-      //   phone: "",
-      //   email: "",
-      //   web: "",
-      //   image: { url: "", alt: "" },
-      //   address: {
-      //     state: "",
-      //     country: "",
-      //     city: "",
-      //     street: "",
-      //     houseNumber: 0,
-      //     zip: "",
-      //   },
       user_id: currentUser?._id || "",
-      
-    },
+    };
+  } else if (action === "newFromExist" && item) {
+    initialValues = {
+      title: item.title,
+      subtitle: item.subtitle || "",
+      description: item.description || "",
+      phone: item.phone,
+      email: item.email,
+      web: item.web || "",
+      image: {
+        url: item.image.url,
+        alt: item.image.alt,
+      },
+      address: {
+        state: item.address.state || "",
+        country: item.address.country,
+        city: item.address.city,
+        street: item.address.street,
+        houseNumber: item.address.houseNumber,
+        zip: item.address.zip || "",
+      },
+      user_id: currentUser?._id || "",
+    };
+  }
+
+  const formik = useFormik<NewCard>({
+    initialValues: initialValues,
+
     validationSchema: yup.object({
       title: yup.string().required("Title is required").min(2).max(256),
       subtitle: yup.string().required("Sub title is required").min(2).max(256),
@@ -96,24 +135,40 @@ const NewEditCard: FunctionComponent<NewEditCardProps> = () => {
       }),
     }),
     onSubmit: async (values) => {
-      if (action === "edit") {
-        // const response = await updateCard();
-        // successMsg("Card updated successfully!");
-        // navigate("/cards");
-      } else {
+      console.log(action);
+      if (action === "update") {
+        updateCard(values, token,item._id)
+          .then((res) => {
+            const updatedIndex = localCardArray.findIndex(
+              (card) => card._id === res.data._id
+            );
+
+            if (updatedIndex > -1) {
+              localCardArray[updatedIndex] = res.data;
+              setCardArray(localCardArray);
+              successMsg("Card updated successfully!");
+              // navigate(-1)
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            errorMsg(`Transaction Error`);
+          });
+      } else if (action === "newFromExist" || action === "new") {
         // console.log(values);
         createNewCard(values, token)
           .then((res) => {
             console.log(res.data);
-            
-            if (cardArray!==null)
-             localCardArray = [...cardArray];
+
             localCardArray.push(res.data);
             setCardArray(localCardArray);
+            // navigate(-1)
           })
           .catch((err) => {
             console.log(err);
-            errorMsg(`Transaction Error - ${err.response.data}`);
+            errorMsg(
+              `Transaction Error - Make sure email was changed to unique one`
+            );
           });
 
         // successMsg("New card created successfully!");
@@ -398,12 +453,20 @@ const NewEditCard: FunctionComponent<NewEditCardProps> = () => {
 
           <div className="d-flex justify-content-center align-item-center flex-row col-12 mt-4">
             <div className="mx-3 mt-4 col-6 ">
-              <button type="submit" className="btn btn-primary w-100">
+              <button
+                type="submit"
+                className="btn btn-primary w-100"
+                onClick={() => navigate(-1)}
+              >
                 Submit
               </button>
             </div>
             <div className="mx-3 mt-4 col-6 ">
-              <button type="submit" className="btn btn-secondary w-100">
+              <button
+                type="button"
+                className="btn btn-secondary w-100"
+                onClick={() => navigate(-1)}
+              >
                 Cancel
               </button>
             </div>
