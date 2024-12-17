@@ -1,4 +1,4 @@
-import { FunctionComponent, useContext } from "react";
+import { FunctionComponent, useContext, useState } from "react";
 import { NavigateFunction, NavLink, useNavigate } from "react-router-dom";
 
 import { GlobalProps } from "../App";
@@ -7,10 +7,14 @@ import { Margin } from "@mui/icons-material";
 interface NavBarProps {}
 
 const NavBar: FunctionComponent<NavBarProps> = () => {
-  const { currentUser, isDarkMode, setIsDarkMode, setIsUsserLogedin } =
+  const { currentUser, isDarkMode, setIsDarkMode, setIsUsserLogedin,searchString, 
+    setSearchString } =
     useContext(GlobalProps);
 
   const navigate: NavigateFunction = useNavigate();
+  const [txt,setTxt]= useState("");
+
+  
   function handleDark() {
     setIsDarkMode(!isDarkMode);
   }
@@ -39,7 +43,7 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
           >
             <span className="navbar-toggler-icon"></span>
           </button>
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+          <div className="collapse navbar-collapse " id="navbarSupportedContent">
             <>
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 <li className="nav-item">
@@ -85,17 +89,34 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
                 )}
               </ul>
 
-              <form className="d-flex" role="search">
+
+              
+
+              <form className="d-flex mx-auto" role="search" onSubmit={(e) => e.preventDefault()}>
                 <input
                   className="form-control me-2 text-light"
                   type="search"
                   placeholder="Search"
                   aria-label="Search"
+                  value={txt}
                   // onClick={()=>{alert("Search functionality not implemented yet")}}
-                  onChange={() => {
-                    alert("Search functionality not implemented yet");
+                  onChange={(e) => {
+                    setTxt(e.target.value);
+                    // setSearchString(e.target.value);
+                  //  console.log(e.target.value);
+
+
+    //                searchString, 
+    // setSearchString,
+
                   }}
-                />
+                >
+                </input>
+                <button onClick={
+                  () => {
+                    setSearchString(txt);
+                    console.log(txt)
+                  }}>Search</button>
               </form>
               {isDarkMode ? (
                 <i

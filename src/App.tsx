@@ -44,6 +44,9 @@ interface GlobalPropsType {
 
   isDarkMode: boolean;
   setIsDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
+  searchString: string;
+   setSearchString: React.Dispatch<React.SetStateAction<string>>;
+  
 }
 export const GlobalProps = createContext<GlobalPropsType>({
   isUserLogedin: false,
@@ -57,9 +60,13 @@ export const GlobalProps = createContext<GlobalPropsType>({
 
   isDarkMode: false,
   setIsDarkMode: () => {},
+  searchString: "",
+   setSearchString: () => {},
 });
 
-export async function getAllCardsFromAPI(setCardArray: React.Dispatch<React.SetStateAction<CardRecFull[] | null>>) {
+export async function getAllCardsFromAPI(
+  setCardArray: React.Dispatch<React.SetStateAction<CardRecFull[] | null>>
+) {
   try {
     const res = await getAllCards();
 
@@ -74,15 +81,16 @@ export async function getAllCardsFromAPI(setCardArray: React.Dispatch<React.SetS
 
 function App() {
   const localToken = getTokenLocalStorage() || "";
-  // console.log(localToken);
-  const [token, setToken] = useState(localToken);
-  const [isUserLogedin, setIsUsserLogedin] = useState(
-    localToken === "" ? false : true
-  );
 
+  const [token, setToken] = useState(localToken);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [cardArray, setCardArray] = useState<CardRecFull[] | null>([]);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [searchString, setSearchString] = useState("");
+
+  const [isUserLogedin, setIsUsserLogedin] = useState(
+    localToken === "" ? false : true
+  );
 
   const globalContextValue = {
     isUserLogedin,
@@ -95,7 +103,8 @@ function App() {
     setCardArray,
     isDarkMode,
     setIsDarkMode,
-    
+    searchString, 
+    setSearchString,
   };
 
   // check if user alreadt login before
@@ -111,7 +120,6 @@ function App() {
           const userRec = { ...res.data, isAdmin: false, isBusiness: true };
           setCurrentUser(userRec);
           // setCurrentUser(res.data)
-
         })
         .catch((err) => {
           console.log(err);
@@ -122,23 +130,18 @@ function App() {
     }
   }, [localToken]);
 
-
- 
-
   useEffect(() => {
     // console.log("----------------------------card array changed----------------------------");
     // console.log("length", cardArray?.length);
-    if (cardArray?.length === 0) {  // Check if cardArray has no items
-    
-  
+    if (cardArray?.length === 0) {
+      // Check if cardArray has no items
+
       getAllCardsFromAPI(setCardArray);
     }
   }, [cardArray]);
 
   return (
     <>
-
-    
       <ToastContainer />
       <GlobalProps.Provider value={globalContextValue}>
         <div className="App">

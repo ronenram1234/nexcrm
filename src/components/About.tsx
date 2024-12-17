@@ -145,6 +145,7 @@ const About: FunctionComponent<AboutProps> = () => {
             project to increase accessibility and improve the user experience on
             smartphones.
           </li>
+          
         </ul>
       </section>
     </div>
