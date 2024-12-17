@@ -27,6 +27,8 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
     setTxt(searchString);
   }, [searchString]);
 
+ 
+
   return (
     <>
       <nav

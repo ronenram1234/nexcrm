@@ -35,7 +35,7 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
   originScreen,
 }) => {
   const navigate = useNavigate();
-  const { currentUser, token, cardArray, setCardArray } =
+  const { currentUser, token, cardArray, setCardArray,isDarkMode } =
     useContext(GlobalProps);
   const [address, setAddress] = useState<string>(
     `${item.address.street} ${item.address.houseNumber}, ${item.address.city},  ${item.address.country}, ${item.address.zip}`
@@ -127,7 +127,9 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
   return (
     <>
       <Col key={ind}>
-        <Card className="h-100">
+      <Card
+        className={`h-100 ${isDarkMode ? "bg-dark text-light" : "bg-light text-dark"}`}
+      >
           <Card.Img
             variant="top"
             src={imgError ? "/path/to/fallback-image.jpg" : item.image.url}
