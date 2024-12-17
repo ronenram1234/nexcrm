@@ -86,10 +86,15 @@ const Register: FunctionComponent<RegisterProps> = ({ setIsRegister }) => {
         .required()
         .min(5, "must be at least 5 characters"),
       password: yup
-        .string()
-        .required()
-        .min(7, "must be at least 7 characters")
-        .max(20, "cannot exceed 20 characters"),
+      .string()
+      .required('Password is required')
+      .min(7, 'Password must be at least 7 characters')
+      .max(20, 'Password cannot exceed 20 characters')
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=(.*\d.*\d.*\d.*\d))(?=.*[!*@#$%^&*()_+={}\[\]:;"\'<>,.?/-]).{7,20}$/,
+        "Password must contain at least one uppercase letter, one lowercase letter, at least 4 digits, and one special character"
+      ),
+    
       image: yup.object({
         url: yup.string().min(14).url("Invalid URL"),
         alt: yup.string().min(2).max(256),
