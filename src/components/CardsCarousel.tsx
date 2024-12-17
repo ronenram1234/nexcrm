@@ -65,7 +65,7 @@ const CardsCarousel: FunctionComponent<CardsCarouselProps> = ({
 
   // console.log("carsoule", carouselCardArray)
   useEffect(() => {
-    cardChunks = chunkCards(carouselCardArray || [], 10);
+    cardChunks = chunkCards(carouselCardArray || [],8);
     setChunksArr(cardChunks);
     // console.log("2",carouselCardArray)
   }, [carouselCardArray, searchString]);

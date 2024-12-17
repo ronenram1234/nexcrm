@@ -160,9 +160,9 @@ function App() {
 
                   <Route path="*" element={<PageNotFound />} />
                 </Routes>
+            <Footer />
               </Router>
             </div>
-            <Footer />
           </>
         </div>
       </GlobalProps.Provider>
