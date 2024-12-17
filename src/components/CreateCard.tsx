@@ -21,6 +21,7 @@ import { clearScreenDown } from "readline";
 import CardDetails from "./CardDetails";
 import { useNavigate } from "react-router-dom";
 import { errorMsg, successMsg } from "../services/feedbackService";
+import Swal from "sweetalert2";
 
 interface CreateCardProps {
   item: CardRecFull;
@@ -81,7 +82,19 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
   };
 
   function handleTrashClick(bizNumber: number, token: string, cardId: string) {
-    deleteCard(bizNumber, token, cardId)
+
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteCard(bizNumber, token, cardId)
       .then((res) => {
         successMsg("Card deleted successfully!");
 
@@ -92,6 +105,12 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
         errorMsg("Error deleting");
         console.log(error);
       });
+        // // Perform delete action
+        // Swal.fire("Deleted!", "Your file has been deleted.", "success");
+      }
+    });
+
+    
   }
 
   function handleEditClick(item: CardRecFull) {

@@ -2,7 +2,7 @@ import { FunctionComponent, useEffect, useState } from "react";
 
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 
-import { LatLngExpression } from "leaflet";
+
 import { clearScreenDown } from "readline";
 import axios from "axios";
 
