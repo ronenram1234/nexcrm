@@ -20,15 +20,14 @@ import {
 import { Jwt } from "./interfaces/Jwt";
 import { CardRecFull } from "./interfaces/Card";
 import About from "./components/About";
-import Mycards from "./components/MyCards";
-import Favcards from "./components/FavCards";
+
 import Sandbox from "./components/Sandbox";
 import FavCards from "./components/FavCards";
 import MyCards from "./components/MyCards";
 import { errorMsg } from "./services/feedbackService";
 import { getAllCards } from "./services/cardServices";
 import CardDetails from "./components/CardDetails";
-import NewCard from "./components/NewEditCard";
+
 import NewEditCard from "./components/NewEditCard";
 import { ToastContainer } from "react-toastify";
 
@@ -45,8 +44,7 @@ interface GlobalPropsType {
   isDarkMode: boolean;
   setIsDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
   searchString: string;
-   setSearchString: React.Dispatch<React.SetStateAction<string>>;
-  
+  setSearchString: React.Dispatch<React.SetStateAction<string>>;
 }
 export const GlobalProps = createContext<GlobalPropsType>({
   isUserLogedin: false,
@@ -61,7 +59,7 @@ export const GlobalProps = createContext<GlobalPropsType>({
   isDarkMode: false,
   setIsDarkMode: () => {},
   searchString: "",
-   setSearchString: () => {},
+  setSearchString: () => {},
 });
 
 export async function getAllCardsFromAPI(
@@ -103,7 +101,7 @@ function App() {
     setCardArray,
     isDarkMode,
     setIsDarkMode,
-    searchString, 
+    searchString,
     setSearchString,
   };
 
@@ -131,11 +129,7 @@ function App() {
   }, [localToken]);
 
   useEffect(() => {
-    // console.log("----------------------------card array changed----------------------------");
-    // console.log("length", cardArray?.length);
     if (cardArray?.length === 0) {
-      // Check if cardArray has no items
-
       getAllCardsFromAPI(setCardArray);
     }
   }, [cardArray]);
@@ -160,7 +154,7 @@ function App() {
 
                   <Route path="*" element={<PageNotFound />} />
                 </Routes>
-            <Footer />
+                <Footer />
               </Router>
             </div>
           </>
