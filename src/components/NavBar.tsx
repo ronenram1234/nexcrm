@@ -2,7 +2,7 @@ import { FunctionComponent, useContext, useEffect, useState } from "react";
 import { NavigateFunction, NavLink, useNavigate } from "react-router-dom";
 
 import { GlobalProps } from "../App";
-import { Margin } from "@mui/icons-material";
+
 
 interface NavBarProps {}
 
@@ -101,6 +101,8 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
                   </li>
                 )}
               </ul>
+    
+              
 
               <form
                 className="d-flex mx-auto"

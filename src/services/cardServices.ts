@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { CardRecFull, NewCard } from "../interfaces/Card";
+import {  NewCard } from "../interfaces/Card";
 
 const api: string = `${process.env.REACT_APP_API}/cards`;
 

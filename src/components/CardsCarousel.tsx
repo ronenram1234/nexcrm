@@ -72,12 +72,16 @@ const CardsCarousel: FunctionComponent<CardsCarouselProps> = ({
 
   return (
     <div className="container mt-4">
+
+
+
       <Tabs
         id="card-tabs"
         activeKey={activeTab}
         onSelect={(k) => setActiveTab(k || "Tab 1")}
         className="mb-3"
-      >
+        >
+   
         {chunksArr.map((chunk: CardRecFull[], index: number) => (
           <Tab
             eventKey={`Tab ${index + 1}`}
