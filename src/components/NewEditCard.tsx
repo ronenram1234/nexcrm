@@ -1,5 +1,5 @@
-import { FunctionComponent, useState, useContext, useEffect } from "react";
-import { isEmptyArray, useFormik } from "formik";
+import { FunctionComponent,  useContext } from "react";
+import {  useFormik } from "formik";
 import * as yup from "yup";
 import TextField from "@mui/material/TextField";
 import { GlobalProps } from "../App";
@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { createNewCard, updateCard } from "../services/cardServices";
 import { successMsg, errorMsg } from "../services/feedbackService";
 import { CardRecFull, NewCard } from "../interfaces/Card";
+import FormActions from "./FormActions";
 
 interface NewEditCardProps {}
 
@@ -16,7 +17,7 @@ const NewEditCard: FunctionComponent<NewEditCardProps> = () => {
   const item = location.state?.item;
   const navigate = useNavigate();
 
-  const [initialCard, setInitialCard] = useState<CardRecFull | null>(null);
+  // const [initialCard, setInitialCard] = useState<CardRecFull | null>(null);
   const { currentUser, cardArray, setCardArray, token } =
     useContext(GlobalProps);
   let localCardArray: CardRecFull[] = cardArray !== null ? [...cardArray] : [];
@@ -176,6 +177,8 @@ const NewEditCard: FunctionComponent<NewEditCardProps> = () => {
       }
     },
   });
+
+  const onCancel = () => navigate(-1);
 
   return (
     <>
@@ -451,26 +454,8 @@ const NewEditCard: FunctionComponent<NewEditCardProps> = () => {
             </div>
           </div>
 
-          <div className="d-flex justify-content-center align-item-center flex-row col-12 mt-4">
-            <div className="mx-3 mt-4 col-6 ">
-              <button
-                type="submit"
-                className="btn btn-primary w-100"
-                onClick={() => navigate(-1)}
-              >
-                Submit
-              </button>
-            </div>
-            <div className="mx-3 mt-4 col-6 ">
-              <button
-                type="button"
-                className="btn btn-secondary w-100"
-                onClick={() => navigate(-1)}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
+          <FormActions onSubmit={formik.handleSubmit} onCancel={onCancel}  />
+          <br />
         </form>
       </div>
     </>
