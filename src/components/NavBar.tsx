@@ -1,4 +1,4 @@
-import { FunctionComponent, useContext, useState } from "react";
+import { FunctionComponent, useContext, useEffect, useState } from "react";
 import { NavigateFunction, NavLink, useNavigate } from "react-router-dom";
 
 import { GlobalProps } from "../App";
@@ -7,17 +7,25 @@ import { Margin } from "@mui/icons-material";
 interface NavBarProps {}
 
 const NavBar: FunctionComponent<NavBarProps> = () => {
-  const { currentUser, isDarkMode, setIsDarkMode, setIsUsserLogedin,searchString, 
-    setSearchString } =
-    useContext(GlobalProps);
+  const {
+    currentUser,
+    isDarkMode,
+    setIsDarkMode,
+    setIsUsserLogedin,
+    setSearchString,
+    searchString,
+  } = useContext(GlobalProps);
 
   const navigate: NavigateFunction = useNavigate();
-  const [txt,setTxt]= useState("");
+  const [txt, setTxt] = useState("");
 
-  
   function handleDark() {
     setIsDarkMode(!isDarkMode);
   }
+
+  useEffect(() => {
+    setTxt(searchString);
+  }, [searchString]);
 
   return (
     <>
@@ -29,6 +37,7 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
           <NavLink
             className="navbar-brand text-info text-light-emphasis"
             to="/"
+            onClick={() => setSearchString("")}
           >
             <div title="View all cards">NEXCRM</div>
           </NavLink>
@@ -43,24 +52,24 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
           >
             <span className="navbar-toggler-icon"></span>
           </button>
-          <div className="collapse navbar-collapse " id="navbarSupportedContent">
+          <div
+            className="collapse navbar-collapse "
+            id="navbarSupportedContent"
+          >
             <>
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 <li className="nav-item">
-                  <NavLink className="nav-link" aria-current="page" to="/about">
+                  <NavLink className="nav-link" aria-current="page" to="/about"  onClick={() => setSearchString("")}>
                     ABOUT
                   </NavLink>
                 </li>
-                {/* <li>
-                <NavLink className="nav-link" aria-current="page" to="/">
-                  ALL CARDS
-                </NavLink>
-              </li> */}
+             
                 <li>
                   <NavLink
                     className="nav-link"
                     aria-current="page"
                     to="/favcards"
+                    onClick={() => setSearchString("")}
                   >
                     FAV CARDS
                   </NavLink>
@@ -71,6 +80,7 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
                       className="nav-link"
                       aria-current="page"
                       to="/mycards"
+                      onClick={() => setSearchString("")}
                     >
                       MY CARDS
                     </NavLink>
@@ -82,6 +92,7 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
                       className="nav-link"
                       aria-current="page"
                       to="/sandbox"
+                      onClick={() => setSearchString("")}
                     >
                       SANDBOX
                     </NavLink>
@@ -89,34 +100,29 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
                 )}
               </ul>
 
-
-              
-
-              <form className="d-flex mx-auto" role="search" onSubmit={(e) => e.preventDefault()}>
+              <form
+                className="d-flex mx-auto"
+                role="search"
+                onSubmit={(e) => e.preventDefault()}
+              >
                 <input
                   className="form-control me-2 text-light"
                   type="search"
                   placeholder="Search"
                   aria-label="Search"
                   value={txt}
-                  // onClick={()=>{alert("Search functionality not implemented yet")}}
                   onChange={(e) => {
                     setTxt(e.target.value);
-                    // setSearchString(e.target.value);
-                  //  console.log(e.target.value);
-
-
-    //                searchString, 
-    // setSearchString,
-
+                  }}
+                ></input>
+                <button
+                  onClick={() => {
+                    setSearchString(txt);
+                    console.log(txt);
                   }}
                 >
-                </input>
-                <button onClick={
-                  () => {
-                    setSearchString(txt);
-                    console.log(txt)
-                  }}>Search</button>
+                  Search
+                </button>
               </form>
               {isDarkMode ? (
                 <i
