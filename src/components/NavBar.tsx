@@ -92,20 +92,53 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
                       onClick={() => init()}
                     >
                       MY CARDS
+                      
                     </NavLink>
                   </li>
                 )}
                 {currentUser?.isAdmin && (
-                  <li>
-                    <NavLink
-                      className="nav-link"
-                      aria-current="page"
-                      to="/sandbox"
-                      onClick={() => init()}
-                    >
-                      SANDBOX
-                    </NavLink>
-                  </li>
+                 <li className="nav-item dropdown">
+                 <a
+                   className="nav-link dropdown-toggle"
+                   href="#"
+                   id="sandboxDropdown"
+                   role="button"
+                   data-bs-toggle="dropdown"
+                   aria-expanded="false"
+                   onClick={(e) => e.preventDefault()} // Prevent default navigation on dropdown toggle
+                 >
+                   SANDBOX
+                 </a>
+                 <ul className="dropdown-menu" aria-labelledby="sandboxDropdown">
+                   <li>
+                     <NavLink
+                       className="dropdown-item"
+                       to="/sandbox/adminusers"
+                       onClick={() => init()}
+                     >
+                       Admin Users
+                     </NavLink>
+                   </li>
+                   <li>
+                     <NavLink
+                       className="dropdown-item"
+                       to="/sandbox/admincards"
+                       onClick={() => init()}
+                     >
+                       Admin Cards
+                     </NavLink>
+                   </li>
+                   <li>
+                     <NavLink
+                       className="dropdown-item"
+                       to="/sandbox/adminstats"
+                       onClick={() => init()}
+                     >
+                       Admin Stats
+                     </NavLink>
+                   </li>
+                 </ul>
+               </li>
                 )}
               </ul>
     

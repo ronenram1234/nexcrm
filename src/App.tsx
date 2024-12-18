@@ -21,7 +21,7 @@ import { Jwt } from "./interfaces/Jwt";
 import { CardRecFull } from "./interfaces/Card";
 import About from "./components/About";
 
-import Sandbox from "./components/Sandbox";
+
 import FavCards from "./components/FavCards";
 import MyCards from "./components/MyCards";
 import { errorMsg } from "./services/feedbackService";
@@ -30,7 +30,9 @@ import CardDetails from "./components/CardDetails";
 
 import NewEditCard from "./components/NewEditCard";
 import { ToastContainer } from "react-toastify";
-
+import AdminUsers from "./components/AdminUsers";
+import AdminCards from "./components/AdminCards";
+import AdminStats from "./components/AdminStats";
 
 interface GlobalPropsType {
   isUserLogedin: boolean;
@@ -48,7 +50,7 @@ interface GlobalPropsType {
   setSearchString: React.Dispatch<React.SetStateAction<string>>;
 
   sort: string;
-  setSort:React.Dispatch<React.SetStateAction<string>>;
+  setSort: React.Dispatch<React.SetStateAction<string>>;
 }
 export const GlobalProps = createContext<GlobalPropsType>({
   isUserLogedin: false,
@@ -64,11 +66,9 @@ export const GlobalProps = createContext<GlobalPropsType>({
   setIsDarkMode: () => {},
   searchString: "",
   setSearchString: () => {},
-  sort: "", 
-  setSort:() => {} ,
+  sort: "",
+  setSort: () => {},
 });
-
-
 
 export async function getAllCardsFromAPI(
   setCardArray: React.Dispatch<React.SetStateAction<CardRecFull[] | null>>
@@ -84,9 +84,6 @@ export async function getAllCardsFromAPI(
     }
   }
 }
-
-
-
 
 function App() {
   const localToken = getTokenLocalStorage() || "";
@@ -115,7 +112,7 @@ function App() {
     setIsDarkMode,
     searchString,
     setSearchString,
-    sort, 
+    sort,
     setSort,
   };
 
@@ -131,7 +128,7 @@ function App() {
           // test of user admin/business/regular
           // const userRec = { ...res.data, isAdmin: false, isBusiness: true };
           // setCurrentUser(userRec);
-          setCurrentUser(res.data)
+          setCurrentUser(res.data);
         })
         .catch((err) => {
           console.log(err);
@@ -148,7 +145,6 @@ function App() {
     }
   }, [cardArray]);
 
-
   useEffect(() => {
     if (isDarkMode) {
       document.body.classList.add("dark-mode");
@@ -158,9 +154,6 @@ function App() {
       document.body.classList.remove("dark-mode");
     }
   }, [isDarkMode]);
-
-
-  
 
   return (
     <>
@@ -176,10 +169,13 @@ function App() {
                   <Route path="/about" element={<About />} />
                   <Route path="/favcards" element={<FavCards />} />
                   <Route path="/mycards" element={<MyCards />} />
-                  <Route path="/sandbox" element={<Sandbox />} />
+                  <Route path="/sandbox">
+                    <Route path="adminusers" element={<AdminUsers />} />
+                    <Route path="admincards" element={<AdminCards />} />
+                    <Route path="adminstats" element={<AdminStats />} />
+                  </Route>
                   <Route path="/carddetails" element={<CardDetails />} />
                   <Route path="/neweditcard" element={<NewEditCard />} />
-                  
 
                   <Route path="*" element={<PageNotFound />} />
                 </Routes>
