@@ -148,7 +148,7 @@ const NewEditCard: FunctionComponent<NewEditCardProps> = () => {
               localCardArray[updatedIndex] = res.data;
               setCardArray(localCardArray);
               successMsg("Card updated successfully!");
-              // navigate(-1)
+              navigate(-1)
             }
           })
           .catch((err) => {
@@ -163,7 +163,7 @@ const NewEditCard: FunctionComponent<NewEditCardProps> = () => {
 
             localCardArray.push(res.data);
             setCardArray(localCardArray);
-            // navigate(-1)
+            navigate(-1)
           })
           .catch((err) => {
             console.log(err);

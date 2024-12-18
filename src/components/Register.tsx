@@ -1,4 +1,4 @@
-import { FunctionComponent, useContext, useState } from "react";
+import { FunctionComponent,  useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { UserReg } from "../interfaces/User";

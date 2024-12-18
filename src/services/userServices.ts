@@ -26,23 +26,36 @@ export function getUserToken({
   });
 }
 
-
-export function getUserDetail(id: string,token:string):Promise<AxiosResponse>{
-
+export function getUserDetail(
+  id: string,
+  token: string
+): Promise<AxiosResponse> {
   let config = {
-    method: 'get',
+    method: "get",
     maxBodyLength: Infinity,
-    url:`${api}/${id}`,
-   
-    headers: { 
-      'x-auth-token': `${token}`
-   
-    }
+    url: `${api}/${id}`,
+
+    headers: {
+      "x-auth-token": `${token}`,
+    },
   };
 
-  return axios.request(config)
+  return axios.request(config);
 }
 
+export function getAllUsersDetail(token: string): Promise<AxiosResponse> {
+  let config = {
+    method: "get",
+    maxBodyLength: Infinity,
+    url: api,
+    headers: {
+      "x-auth-token":
+        token,
+    },
+  };
+
+  return axios.request(config);
+}
 
 // acess to localstorage
 
@@ -57,19 +70,14 @@ export function getTokenLocalStorage(): string {
 }
 
 export function removeTokenLocalStorage() {
-
   localStorage.removeItem(tokenKey);
 }
 
 // Use jwt decode
 
-
-export function tokenToDecoode(token:string):Jwt{
-
-  const record:Jwt = jwtDecode(token) || {}
-  return record
+export function tokenToDecoode(token: string): Jwt {
+  const record: Jwt = jwtDecode(token) || {};
+  return record;
 }
 
-// 
-
-
+//

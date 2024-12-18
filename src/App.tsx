@@ -31,6 +31,7 @@ import CardDetails from "./components/CardDetails";
 import NewEditCard from "./components/NewEditCard";
 import { ToastContainer } from "react-toastify";
 
+
 interface GlobalPropsType {
   isUserLogedin: boolean;
   setIsUsserLogedin: React.Dispatch<React.SetStateAction<boolean>>;
@@ -178,6 +179,7 @@ function App() {
                   <Route path="/sandbox" element={<Sandbox />} />
                   <Route path="/carddetails" element={<CardDetails />} />
                   <Route path="/neweditcard" element={<NewEditCard />} />
+                  
 
                   <Route path="*" element={<PageNotFound />} />
                 </Routes>

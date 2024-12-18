@@ -1,6 +1,6 @@
 import { FunctionComponent, useContext, useEffect, useState } from "react";
 import { CardRecFull } from "../interfaces/Card";
-import Modal from "react-bootstrap/Modal";
+
 
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
@@ -17,8 +17,7 @@ import { faHeart as faRegularHeart } from "@fortawesome/free-regular-svg-icons";
 
 import { GlobalProps } from "../App";
 import { deleteCard, setLikeDislike } from "../services/cardServices";
-import { clearScreenDown } from "readline";
-import CardDetails from "./CardDetails";
+
 import { useNavigate } from "react-router-dom";
 import { errorMsg, successMsg } from "../services/feedbackService";
 import Swal from "sweetalert2";

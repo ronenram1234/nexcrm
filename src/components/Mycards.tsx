@@ -24,7 +24,7 @@ const MyCards: FunctionComponent<MycardsProps> = () => {
       );
     }
 
-  },[cardArray]);
+  },[cardArray, currentUser]);
 
     
     return ( <>

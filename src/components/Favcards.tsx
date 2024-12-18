@@ -19,7 +19,7 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
       );
     }
 
-  },[cardArray]);
+  },[cardArray, currentUser]);
 
 
 

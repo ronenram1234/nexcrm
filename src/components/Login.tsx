@@ -18,7 +18,7 @@ interface LoginProps {
 
 const Login: FunctionComponent<LoginProps> = ({ setIsRegister }) => {
   const { setToken, setIsUsserLogedin } = useContext(GlobalProps);
-  const [msg, setMsg] = useState("");
+  // const [msg, setMsg] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
@@ -109,7 +109,9 @@ const Login: FunctionComponent<LoginProps> = ({ setIsRegister }) => {
         >
           Login
         </button>
-        <p style={{ color: "red" }}>{msg}</p>
+
+        {/* <p style={{ color: "red" }}>{msg}</p> */}
+        
       </form>
 
       <p className="mt-3">
