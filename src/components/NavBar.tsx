@@ -14,6 +14,7 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
     setIsUsserLogedin,
     setSearchString,
     searchString,
+    setSort
   } = useContext(GlobalProps);
 
   const navigate: NavigateFunction = useNavigate();
@@ -29,6 +30,12 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
 
  
 
+  function init(): void {
+     
+   setSearchString(""); // Reset the searchString state
+   setSort(""); // Reset the sort state
+  }
+
   return (
     <>
       <nav
@@ -39,7 +46,7 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
           <NavLink
             className="navbar-brand text-info text-light-emphasis"
             to="/"
-            onClick={() => setSearchString("")}
+            onClick={() => init()}
           >
             <div title="View all cards">NEXCRM</div>
           </NavLink>
@@ -61,7 +68,7 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
             <>
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 <li className="nav-item">
-                  <NavLink className="nav-link" aria-current="page" to="/about"  onClick={() => setSearchString("")}>
+                  <NavLink className="nav-link" aria-current="page" to="/about"  onClick={() => init()}>
                     ABOUT
                   </NavLink>
                 </li>
@@ -71,7 +78,7 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
                     className="nav-link"
                     aria-current="page"
                     to="/favcards"
-                    onClick={() => setSearchString("")}
+                    onClick={() => init()}
                   >
                     FAV CARDS
                   </NavLink>
@@ -82,7 +89,7 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
                       className="nav-link"
                       aria-current="page"
                       to="/mycards"
-                      onClick={() => setSearchString("")}
+                      onClick={() => init()}
                     >
                       MY CARDS
                     </NavLink>
@@ -94,7 +101,7 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
                       className="nav-link"
                       aria-current="page"
                       to="/sandbox"
-                      onClick={() => setSearchString("")}
+                      onClick={() => init()}
                     >
                       SANDBOX
                     </NavLink>

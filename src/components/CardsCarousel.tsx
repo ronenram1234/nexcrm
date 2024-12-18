@@ -5,7 +5,7 @@ import ModalLoginReg from "./ModalLoginReg";
 
 import CreateCard from "./CreateCard";
 import { Carousel, Row, Tab, Tabs } from "react-bootstrap";
-import { Switch } from "@mui/material";
+
 import { CardRecFull } from "../interfaces/Card";
 
 interface CardsCarouselProps {
@@ -21,7 +21,7 @@ const CardsCarousel: FunctionComponent<CardsCarouselProps> = ({
   const [activeTab, setActiveTab] = useState<string>("Tab 1");
   const [chunksArr, setChunksArr] = useState<any[]>([]);
 
-  const { searchString } = useContext(GlobalProps);
+  const { searchString,sort } = useContext(GlobalProps);
 
 
 // filter cards according to screen search text input
@@ -43,6 +43,38 @@ const CardsCarousel: FunctionComponent<CardsCarouselProps> = ({
     });
   }
 
+  function sortCards(cards: CardRecFull[], sort: string): CardRecFull[] {
+    // if (sort === "") return cards;
+
+    // const searchLower = searchString.toLowerCase();
+    switch (sort) {
+      case "sortByBusiness":
+        return cards.sort((a, b) => {
+          const bizNumberA = a.bizNumber ?? 0;  
+          const bizNumberB = b.bizNumber ?? 0;  
+          return bizNumberA - bizNumberB;
+        });
+      case "SortByCreateDate":
+        return cards.sort((a, b) => {
+          const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+          const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+          return dateB - dateA;
+        });
+      case "SortByNumberOfLikes":
+        return cards.sort((a, b) => {
+          const likesA = a.likes?.length ?? 0;  
+          const likesB = b.likes?.length ?? 0;  
+          return likesB - likesA;
+        });
+      
+      default:
+        return cards;
+
+    }
+
+   
+  }
+
 
 
 
@@ -52,7 +84,9 @@ const CardsCarousel: FunctionComponent<CardsCarouselProps> = ({
     carouselCardArray: CardRecFull[],
     chunkSize: number
   ): CardRecFull[] {
-    const filteredCards = filterCards(carouselCardArray, searchString);
+
+    const sortedCards = sortCards(carouselCardArray, sort);
+    const filteredCards = filterCards(sortedCards, searchString);
     const chunks: any = [];
         
     for (let i = 0; i < filteredCards.length; i += chunkSize) {
@@ -68,7 +102,7 @@ const CardsCarousel: FunctionComponent<CardsCarouselProps> = ({
     cardChunks = chunkCards(carouselCardArray || [],8);
     setChunksArr(cardChunks);
     // console.log("2",carouselCardArray)
-  }, [carouselCardArray, searchString]);
+  }, [carouselCardArray, searchString,sort]);
 
   return (
     <div className="container mt-4">

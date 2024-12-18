@@ -45,6 +45,9 @@ interface GlobalPropsType {
   setIsDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
   searchString: string;
   setSearchString: React.Dispatch<React.SetStateAction<string>>;
+
+  sort: string;
+  setSort:React.Dispatch<React.SetStateAction<string>>;
 }
 export const GlobalProps = createContext<GlobalPropsType>({
   isUserLogedin: false,
@@ -60,7 +63,11 @@ export const GlobalProps = createContext<GlobalPropsType>({
   setIsDarkMode: () => {},
   searchString: "",
   setSearchString: () => {},
+  sort: "", 
+  setSort:() => {} ,
 });
+
+
 
 export async function getAllCardsFromAPI(
   setCardArray: React.Dispatch<React.SetStateAction<CardRecFull[] | null>>
@@ -77,6 +84,9 @@ export async function getAllCardsFromAPI(
   }
 }
 
+
+
+
 function App() {
   const localToken = getTokenLocalStorage() || "";
 
@@ -85,6 +95,7 @@ function App() {
   const [cardArray, setCardArray] = useState<CardRecFull[] | null>([]);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [searchString, setSearchString] = useState("");
+  const [sort, setSort] = useState("");
 
   const [isUserLogedin, setIsUsserLogedin] = useState(
     localToken === "" ? false : true
@@ -103,6 +114,8 @@ function App() {
     setIsDarkMode,
     searchString,
     setSearchString,
+    sort, 
+    setSort,
   };
 
   // check if user alreadt login before
@@ -115,9 +128,9 @@ function App() {
       getUserDetail(jwtUser._id, localToken)
         .then((res) => {
           // test of user admin/business/regular
-          const userRec = { ...res.data, isAdmin: false, isBusiness: true };
-          setCurrentUser(userRec);
-          // setCurrentUser(res.data)
+          // const userRec = { ...res.data, isAdmin: false, isBusiness: true };
+          // setCurrentUser(userRec);
+          setCurrentUser(res.data)
         })
         .catch((err) => {
           console.log(err);
@@ -144,6 +157,9 @@ function App() {
       document.body.classList.remove("dark-mode");
     }
   }, [isDarkMode]);
+
+
+  
 
   return (
     <>
