@@ -8,18 +8,42 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { DataGrid, GridColDef, GridValueGetter } from "@mui/x-data-grid";
 
 import Paper from "@mui/material/Paper";
-import { CardRecFull } from "../interfaces/Card";
+import { CardAdmin, CardRecFull } from "../interfaces/Card";
 
 interface AdminCardsProps {}
 
 const AdminCards: FunctionComponent<AdminCardsProps> = () => {
   const { cardArray } = useContext(GlobalProps);
-  const [cards, setCards] = useState<CardRecFull[]>([]);
+  const [cards, setCards] = useState<CardAdmin[]>([]);
 
   //   let cards:CardRecFull[]= []
 
   useEffect(() => {
-    if (cardArray !== null) setCards(cardArray);
+    if (cardArray !== null) {
+        const cardAdmins: CardAdmin[] = cardArray.map((card) => ({
+            id: card._id || "",
+            title: card.title || "",
+            subtitle: card.subtitle || "",
+            description: card.description || "",
+            phone: card.phone || "",
+            email: card.email || "",
+            url: card.web || "",
+            state: card.address.state || "",
+            country: card.address.country || "",
+            city: card.address.city || "",
+            street: card.address.street || "",
+            houseNumber: card.address.houseNumber || 0,
+            zip: card.address.zip || 0,
+            bizNumber: card.bizNumber || 0,
+            likesNumber: card.likes ? card.likes.length : 0,
+            user_id: card.user_id || "",
+            createdAt: new Date(card.createdAt) || "",
+          }));
+        setCards(cardAdmins);
+
+    } 
+
+        
   }, [cardArray]);
 
   const [loading, setLoading] = useState(false);
@@ -31,26 +55,11 @@ const AdminCards: FunctionComponent<AdminCardsProps> = () => {
     }
   }, [loading]);
 
-  //   useEffect(() => {
-  //     setLoading(true);
-  //     getAllUsersDetail(token)
-  //       .then((res) => {
-  //         setUsersArray(res.data);
-  //         console.log(res.data);
-  //         setLoading(false);
-  //       })
-  //       .catch((err) => {
-  //         errorMsg(`Transaction Error - ${err.response.data}`);
-  //         setLoading(false);
-  //       });
-  //   }, [token]);
-
-  // Updated columns without the fullName column
-  const columns: GridColDef<CardRecFull>[] = [
+  const columns: GridColDef<CardAdmin>[] = [
     {
-      field: "_id",
+      field: "id",
       headerName: "ID",
-      width: 70,
+      width: 130,
     },
     {
       field: "title",
@@ -78,39 +87,38 @@ const AdminCards: FunctionComponent<AdminCardsProps> = () => {
       width: 180,
     },
     {
-      field: "web",
+      field: "url",
       headerName: "Website",
       width: 180,
     },
-    // {
-    //   field: "image.url",
-    //   headerName: "Image URL",
-    //   width: 200,
-    //   valueGetter: (params: GridValueGetter<CardRecFull>) =>
-    //     params.row.image?.url || "",
-    // },
     {
-      field: "address.city",
+      field: "imageUrl",
+      headerName: "Image URL",
+      width: 200,
+      
+    },
+    {
+      field: "addressCity",
       headerName: "City",
       width: 120,
     },
     {
-      field: "address.country",
+      field: "addressCountry",
       headerName: "Country",
       width: 120,
     },
     {
-      field: "address.street",
+      field: "addressStreet",
       headerName: "Street",
       width: 180,
     },
     {
-      field: "address.houseNumber",
+      field: "addressHouseNumber",
       headerName: "House Number",
       width: 120,
     },
     {
-      field: "address.zip",
+      field: "addressZip",
       headerName: "ZIP Code",
       width: 120,
     },
@@ -119,21 +127,22 @@ const AdminCards: FunctionComponent<AdminCardsProps> = () => {
       headerName: "Business Number",
       width: 150,
     },
-    // {
-    //   field: "likes",
-    //   headerName: "Likes",
-    //   width: 150,
-    //   valueGetter: (params) => (params.row.likes ? params.row.likes.length : 0),
-    // },
-    // {
-    //   field: "createdAt",
-    //   headerName: "Created At",
-    //   width: 180,
-    //   valueGetter: (params) =>
-    //     new Date(params.row.createdAt).toLocaleDateString(),
-    //   sortComparator: (v1, v2) =>
-    //     new Date(v1).getTime() - new Date(v2).getTime(),
-    // },
+    {
+      field: "likesNumber",
+      headerName: "Number Of Likes",
+      width: 150,
+      
+    },
+    {
+        field: "createdAt",
+        headerName: "Created At",
+        width: 180,
+         type: 'dateTime',
+        valueFormatter: (params) => {
+          const date = new Date(params);
+        return date.toLocaleDateString("en-US");
+        },
+      },
   ];
   const paginationModel = { page: 0, pageSize: 5 };
 
@@ -155,7 +164,7 @@ const AdminCards: FunctionComponent<AdminCardsProps> = () => {
             <DataGrid
               rows={cards}
               columns={columns}
-              getRowId={(row) => row._id}
+              getRowId={(row) => row.id}
               initialState={{ pagination: { paginationModel } }}
               pageSizeOptions={[5, 10]}
               sx={{ border: 0 }}

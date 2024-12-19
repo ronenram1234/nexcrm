@@ -1,5 +1,5 @@
 export interface CardAdmin {
-
+  id: string;
   title: string;
   subtitle: string;
   description: string;
@@ -13,9 +13,9 @@ export interface CardAdmin {
   houseNumber: number;
   zip: number;
   bizNumber: number;
-  likes: string[];
+  likesNumber: number;
   user_id: string;
-  createdAt: string;
+  createdAt: Date;
   
 }
 

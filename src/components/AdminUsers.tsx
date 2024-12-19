@@ -5,13 +5,13 @@ import { errorMsg } from "../services/feedbackService";
 import { getAllUsersDetail } from "../services/userServices";
 import ClipLoader from "react-spinners/ClipLoader";
 
-import { DataGrid, GridColDef, GridValueGetter } from "@mui/x-data-grid";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
 
 interface AdminUsersProps {}
 
 const AdminUsers: FunctionComponent<AdminUsersProps> = () => {
-  const { currentUser, cardArray, token } = useContext(GlobalProps);
+  const { token } = useContext(GlobalProps);
   const [usersArray, setUsersArray] = useState<User[]>([]);
   const [userAdmins, setuserAdmins] = useState<UserAdmin[]>([]);
 
@@ -29,7 +29,7 @@ const AdminUsers: FunctionComponent<AdminUsersProps> = () => {
     getAllUsersDetail(token)
       .then((res) => {
         setUsersArray(res.data);
-        console.log(res.data);
+        // console.log(res.data);
         setLoading(false);
       })
       .catch((err) => {
@@ -55,7 +55,7 @@ const AdminUsers: FunctionComponent<AdminUsersProps> = () => {
       addressZip: user.address.zip || 0,
       isAdmin: user.isAdmin ? "Yes" : "No",
       isBusiness: user.isBusiness ? "Yes" : "No",
-      createdAt: new Date(user.createdAt).toLocaleDateString() || "",
+      createdAt: new Date(user.createdAt),
     }));
     setuserAdmins(userAdminsTmp)
   }, [usersArray]);
@@ -141,7 +141,11 @@ const AdminUsers: FunctionComponent<AdminUsersProps> = () => {
       field: "createdAt",
       headerName: "Created At",
       width: 180,
-     
+       type: 'dateTime',
+      valueFormatter: (params) => {
+        const date = new Date(params);
+      return date.toLocaleDateString("en-US");
+      },
     },
   ];
   const paginationModel = { page: 0, pageSize: 5 };

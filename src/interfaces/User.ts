@@ -14,7 +14,7 @@ export interface UserAdmin {
   addressZip: number;
   isAdmin: string;
   isBusiness: string;
-  createdAt: string;
+  createdAt: Date;
 }
 
 export interface User {
