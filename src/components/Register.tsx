@@ -2,7 +2,9 @@ import { FunctionComponent,  useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { UserReg } from "../interfaces/User";
-import TextField from "@mui/material/TextField";
+// import TextField from "@mui/material/TextField";
+import { TextField } from "@mui/material";
+
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
