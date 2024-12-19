@@ -22,7 +22,6 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
   },[cardArray, currentUser]);
 
 
-
   return (
     <>
       <CardsCarousel
