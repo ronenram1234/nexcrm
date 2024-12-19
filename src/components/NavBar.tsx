@@ -116,7 +116,7 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
                        to="/sandbox/adminusers"
                        onClick={() => init()}
                      >
-                       Admin Users
+                       All Users
                      </NavLink>
                    </li>
                    <li>
@@ -125,7 +125,7 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
                        to="/sandbox/admincards"
                        onClick={() => init()}
                      >
-                       Admin Cards
+                       All Cards
                      </NavLink>
                    </li>
                    <li>
@@ -134,7 +134,7 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
                        to="/sandbox/adminstats"
                        onClick={() => init()}
                      >
-                       Admin Stats
+                       Admin Dashboard
                      </NavLink>
                    </li>
                  </ul>
