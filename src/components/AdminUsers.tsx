@@ -16,7 +16,7 @@ import Paper from "@mui/material/Paper";
 interface AdminUsersProps {}
 
 const AdminUsers: FunctionComponent<AdminUsersProps> = () => {
-  const { currentUser, cardArray, token } = useContext(GlobalProps);
+  const { token } = useContext(GlobalProps);
   const [usersArray, setUsersArray] = useState<User[]>([]);
 
   const [loading, setLoading] = useState(false);
@@ -40,7 +40,7 @@ const AdminUsers: FunctionComponent<AdminUsersProps> = () => {
         errorMsg(`Transaction Error - ${err.response.data}`);
         setLoading(false);
       });
-  }, []);
+  }, [token]);
 
   // Updated columns without the fullName column
   const columns: GridColDef[] = [
