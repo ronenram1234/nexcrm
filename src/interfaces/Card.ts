@@ -83,3 +83,13 @@ export interface NewCard {
   likes?: string[];
   user_id: string;
 }
+
+
+export interface Likes{
+label:number;
+count:number;
+}
+export interface PieLikes{
+  label:string;
+  value:number;
+  }
