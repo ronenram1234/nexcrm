@@ -40,7 +40,7 @@ const AdminUsers: FunctionComponent<AdminUsersProps> = () => {
 
   useEffect(() => {
     const userAdminsTmp: UserAdmin[] = usersArray.map((user) => ({
-      id: user.name._id || "",
+      id: user._id || "",
       nameFirst: user.name.first || "",
       nameMiddle: user.name.middle || "",
       nameLast: user.name.last || "",

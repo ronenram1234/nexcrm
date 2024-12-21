@@ -16,13 +16,13 @@ const AdinUsersStat: FunctionComponent<AdinUsersStatProps> = () => {
   const { cardArray, token } = useContext(GlobalProps);
 
   const [pie, setPie] = useState<PieLikes[]>([]);
-  const [selectedValue, setSelectedValue] = useState<string>("3");
+  const [selectedValue, setSelectedValue] = useState<string>("12");
+  const [selectedValueType, setSelectedValueType] = useState<string>("1");
 
   const [seriesValue, setSeriesValue] = useState<number[]>([3, 2, 1]);
   const [seriesGroup, setSeriesGroup] = useState<string[]>([]);
 
   const [usersArray, setUsersArray] = useState<User[]>([]);
-  //   const [userAdmins, setuserAdmins] = useState<UserAdmin[]>([]);
 
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -35,10 +35,11 @@ const AdinUsersStat: FunctionComponent<AdinUsersStatProps> = () => {
 
   useEffect(() => {
     setLoading(true);
+    
     getAllUsersDetail(token)
       .then((res) => {
         setUsersArray(res.data);
-        // console.log(res.data);
+
         setLoading(false);
       })
       .catch((err) => {
@@ -53,99 +54,75 @@ const AdinUsersStat: FunctionComponent<AdinUsersStatProps> = () => {
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
 
-    // setLoading(true);
-    // getAllUsersDetail(token)
-    //   .then((res) => {
-        // setUsersArray(res.data);
-        for (let i = 0; i < Number(selectedValue); i++) {
-          let month = currentMonth - i;
-          let year = currentYear;
-          if (month < 0) {
-            month = 12 + month;
-            year -= 1;
-          }
-
-          const monthYear = new Date(year, month).toLocaleString("en-US", {
-            month: "short",
-            year: "numeric",
-          });
-
-          series.push(monthYear);
-        //   console.log(series);
-          if (usersArray !== null) {
-            const userPerMonth = usersArray.reduce((acc, user) => {
-              // console.log(user)
-              // console.log(user.createdAt);
-              const date = new Date(user.createdAt);
-              //    console.log(date)
-              const createdMonthYear = date.toLocaleString("en-US", {
-                month: "short",
-                year: "numeric",
-              });
-              //    console.log(createdMonthYear)
-
-              if (createdMonthYear === monthYear) {
-                return acc + 1;
-              }
-              return acc;
-            }, 0);
-            // console.log(userPerMonth);
-            val.push(userPerMonth);
-            // console.log(val);
-          }
-        // }
-
-        setSeriesGroup(series);
-        setSeriesValue(val);
-        // setLoading(false);
+    for (let i = 0; i < Number(selectedValue); i++) {
+      let month = currentMonth - i;
+      let year = currentYear;
+      if (month < 0) {
+        month = 12 + month;
+        year -= 1;
       }
-    // )
-    //   .catch((err) => {
-    //     errorMsg(`Transaction Error - ${err.response.data}`);
-    //     setLoading(false);
-    //   });
-  }, [selectedValue,usersArray]);
 
-  useEffect(() => {
-    const likesCount: Likes[] = [{ label: 0, count: 0 }];
-    const likesCountString: PieLikes[] = [];
+      const monthYear = new Date(year, month).toLocaleString("en-US", {
+        month: "short",
+        year: "numeric",
+      });
 
-    //  console.log(cardArray);
-    cardArray !== null &&
-      cardArray.forEach((card) => {
-        if (Array.isArray(card.likes) && card.likes.length !== undefined) {
-          const found = likesCount.find(
-            (like) => like.label === (card.likes ? card.likes.length : 0)
-          );
+      series.push(monthYear);
 
-          if (found) {
-            found.count++;
-          } else {
-            likesCount.push({ label: card.likes.length, count: 1 });
+      if (usersArray !== null) {
+        // console.log("start")
+        
+          usersArray.map((user) =>{
+        //   if (user._id === "650ae759db3813a6502fc2fc")
+        //     console.log(user)
+        })
+        
+        const userPerMonth = usersArray.reduce((acc, user) => {
+          
+          const validUser: boolean =
+            selectedValueType === "1" ||
+            (selectedValueType === "2" && !user.isAdmin && !user.isBusiness) ||
+            (selectedValueType === "3" && !user.isAdmin && user.isBusiness) ||
+            (user.isAdmin && selectedValueType === "4"  );
+          if (validUser) {
+              
+            const date = new Date(user.createdAt);
+
+            const createdMonthYear = date.toLocaleString("en-US", {
+              month: "short",
+              year: "numeric",
+            });
+
+            if (createdMonthYear === monthYear) {
+                if (user._id === "650ae759db3813a6502fc2fc") {
+                 
+                    console.log(acc);
+                
+                }
+              return acc + 1;
+            }
           }
-        }
-      });
+          return acc;
+        }, 0);
 
-    likesCount.sort((a: Likes, b: Likes) => a.label - b.label);
-
-    likesCount.forEach((likes) => {
-      likesCountString.push({
-        label: likes.label.toString(),
-        value: likes.count,
-      });
-    });
-
-    setPie(likesCountString);
-  }, [cardArray]);
+        val.push(userPerMonth);
+      }
+    }
+    setSeriesGroup(series);
+    setSeriesValue(val);
+  }, [selectedValue, usersArray, selectedValueType]);
 
   function handleChange(event: any) {
     setSelectedValue(event.target.value as string);
+  }
+  function handleChangeType(event: any) {
+    setSelectedValueType(event.target.value as string);
   }
 
   return (
     <>
       <p className="h1 text-center fw-bolder">
-        {loading ? "Loading..." : "Users Table"}
+        {loading ? "Loading..." : ""}
       </p>
 
       {loading ? (
@@ -154,33 +131,7 @@ const AdinUsersStat: FunctionComponent<AdinUsersStatProps> = () => {
         </div>
       ) : (
         <>
-          <div className="col col-6">
-            <div
-              style={{
-                textAlign: "center",
-                marginBottom: "20px",
-                fontSize: "20px",
-              }}
-            >
-              <strong>Users Groupd by number of cards</strong>
-            </div>
-            <PieChart
-              series={[
-                {
-                  data: pie,
-                  highlightScope: { fade: "global", highlight: "item" },
-                  faded: {
-                    innerRadius: 30,
-                    additionalRadius: -30,
-                    color: "gray",
-                  },
-                },
-              ]}
-              height={200}
-            />
-          </div>
-
-          <div className="col col-6">
+          <div className="col col-12">
             <div
               style={{
                 textAlign: "center",
@@ -193,7 +144,7 @@ const AdinUsersStat: FunctionComponent<AdinUsersStatProps> = () => {
             <BarChart
               xAxis={[{ scaleType: "band", data: seriesGroup }]}
               series={[{ data: seriesValue }]}
-              width={500}
+              width={1000}
               height={300}
             />
             <Select
@@ -206,6 +157,17 @@ const AdinUsersStat: FunctionComponent<AdinUsersStatProps> = () => {
               <MenuItem value="12">Last 12 months</MenuItem>
               <MenuItem value="24">Last 24 months</MenuItem>
               <MenuItem value="36">Last 36 months</MenuItem>
+            </Select>
+
+            <Select
+              value={selectedValueType}
+              label="Time Range"
+              onChange={(e) => handleChangeType(e)}
+            >
+              <MenuItem value="1">User Type- All</MenuItem>
+              <MenuItem value="2">User Type- Users</MenuItem>
+              <MenuItem value="3">User Type- Business</MenuItem>
+              <MenuItem value="4">User Type- Admin</MenuItem>
             </Select>
           </div>
         </>
