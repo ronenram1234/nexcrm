@@ -13,7 +13,7 @@ const Main: FunctionComponent<MainProps> = () => {
 
   useEffect(() => {
 
-
+ 
     getAllCardsFromAPI(setCardArray);
   }, [setCardArray]);
 

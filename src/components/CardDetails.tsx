@@ -75,9 +75,9 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
           </div>
         </div>
         <>
-          {/* <div className="container"> */}
+          
             <BussinessMap address={address} />
-          {/* </div> */}
+          
         </>
       </div>
     </>

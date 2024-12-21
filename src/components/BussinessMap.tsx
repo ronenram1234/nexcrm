@@ -3,7 +3,7 @@ import { FunctionComponent, useEffect, useState } from "react";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 
 
-// import { clearScreenDown } from "readline";
+
 import axios from "axios";
 
 interface BussinessMapProps {
@@ -16,15 +16,9 @@ const containerStyle = {
   height: "300px",
 };
 
-// const center = {
-//   lat: 37.7749, // San Francisco latitude
-//   lng: -122.4194, // San Francisco longitude
-// };
+
 
 const BussinessMap: FunctionComponent<BussinessMapProps> = ({ address }) => {
-  // const [location, setLocation] = useState<locationProps | undefined>(
-  //   undefined
-  // );
 
   const [lat, setLat] = useState<number | undefined>(undefined);
   const [lng, setLng] = useState<number | undefined>(undefined);
@@ -73,7 +67,7 @@ const BussinessMap: FunctionComponent<BussinessMapProps> = ({ address }) => {
           </LoadScript>
         )}
       </div>
-      {/* {console.log("-------------------------------")} */}
+  
     </>
   );
 };

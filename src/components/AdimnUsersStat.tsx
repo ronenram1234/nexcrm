@@ -1,10 +1,7 @@
 import { FunctionComponent, useContext, useEffect, useState } from "react";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { GlobalProps } from "../App";
-
 import { Select, MenuItem } from "@mui/material";
-import { PieChart } from "@mui/x-charts/PieChart";
-import { Likes, PieLikes } from "../interfaces/Card";
 import { User } from "../interfaces/User";
 import { getAllUsersDetail } from "../services/userServices";
 import { errorMsg } from "../services/feedbackService";
@@ -13,9 +10,8 @@ import ClipLoader from "react-spinners/ClipLoader";
 interface AdinUsersStatProps {}
 
 const AdinUsersStat: FunctionComponent<AdinUsersStatProps> = () => {
-  const { cardArray, token } = useContext(GlobalProps);
+  const { token } = useContext(GlobalProps);
 
-  const [pie, setPie] = useState<PieLikes[]>([]);
   const [selectedValue, setSelectedValue] = useState<string>("12");
   const [selectedValueType, setSelectedValueType] = useState<string>("1");
 
@@ -35,7 +31,7 @@ const AdinUsersStat: FunctionComponent<AdinUsersStatProps> = () => {
 
   useEffect(() => {
     setLoading(true);
-    
+
     getAllUsersDetail(token)
       .then((res) => {
         setUsersArray(res.data);
@@ -68,24 +64,19 @@ const AdinUsersStat: FunctionComponent<AdinUsersStatProps> = () => {
       });
 
       series.push(monthYear);
-
+ 
       if (usersArray !== null) {
         // console.log("start")
-        
-          usersArray.map((user) =>{
-        //   if (user._id === "650ae759db3813a6502fc2fc")
-        //     console.log(user)
-        })
-        
+
+       
+
         const userPerMonth = usersArray.reduce((acc, user) => {
-          
           const validUser: boolean =
             selectedValueType === "1" ||
             (selectedValueType === "2" && !user.isAdmin && !user.isBusiness) ||
             (selectedValueType === "3" && !user.isAdmin && user.isBusiness) ||
-            (user.isAdmin && selectedValueType === "4"  );
+            (user.isAdmin && selectedValueType === "4");
           if (validUser) {
-              
             const date = new Date(user.createdAt);
 
             const createdMonthYear = date.toLocaleString("en-US", {
@@ -94,11 +85,9 @@ const AdinUsersStat: FunctionComponent<AdinUsersStatProps> = () => {
             });
 
             if (createdMonthYear === monthYear) {
-                if (user._id === "650ae759db3813a6502fc2fc") {
-                 
-                    console.log(acc);
-                
-                }
+              if (user._id === "650ae759db3813a6502fc2fc") {
+                console.log(acc);
+              }
               return acc + 1;
             }
           }
@@ -121,9 +110,7 @@ const AdinUsersStat: FunctionComponent<AdinUsersStatProps> = () => {
 
   return (
     <>
-      <p className="h1 text-center fw-bolder">
-        {loading ? "Loading..." : ""}
-      </p>
+      <p className="h1 text-center fw-bolder">{loading ? "Loading..." : ""}</p>
 
       {loading ? (
         <div className="spinner-container">

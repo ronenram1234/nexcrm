@@ -18,6 +18,6 @@ const AdminStats: FunctionComponent<AdminStatsProps> = () => {
       </div>
     </>
   );
-};
+}; 
 
 export default AdminStats;

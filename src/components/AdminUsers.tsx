@@ -23,7 +23,7 @@ const AdminUsers: FunctionComponent<AdminUsersProps> = () => {
       document.body.classList.remove("cursor-loading");
     }
   }, [loading]);
-
+ 
   useEffect(() => {
     setLoading(true);
     getAllUsersDetail(token)

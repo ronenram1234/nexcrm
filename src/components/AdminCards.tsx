@@ -1,11 +1,9 @@
 import { FunctionComponent, useContext, useEffect, useState } from "react";
 import { GlobalProps } from "../App";
-import { User } from "../interfaces/User";
-import { errorMsg } from "../services/feedbackService";
-import { getAllUsersDetail } from "../services/userServices";
+
 import ClipLoader from "react-spinners/ClipLoader";
 
-import { DataGrid, GridColDef, GridValueGetter } from "@mui/x-data-grid";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
 import Paper from "@mui/material/Paper";
 import { CardAdmin, CardRecFull } from "../interfaces/Card";
@@ -24,10 +22,8 @@ const AdminCards: FunctionComponent<AdminCardsProps> = () => {
         await checkAddress(`${card.address.street}, ${card.address.city},   ${card.address.state || ""} ${card.address.zip}
     ${card.address.country}`);
       if (res.data.status === "OK") {
-        // console.log("good");
         return true;
       } else {
-        // console.log(card._id);
         return false;
       }
     } catch (err) {
@@ -49,7 +45,6 @@ const AdminCards: FunctionComponent<AdminCardsProps> = () => {
           })
         );
         setAddressError(updatedAddressError);
-        // console.log(addressError);
       };
 
       validateAddress();
@@ -58,8 +53,6 @@ const AdminCards: FunctionComponent<AdminCardsProps> = () => {
 
   useEffect(() => {
     if (cardArray !== null) {
-      // console.log(addressError);
-
       const cardAdmins: CardAdmin[] = cardArray.map((card) => ({
         id: card._id || "",
         title: card.title || "",
@@ -79,7 +72,6 @@ const AdminCards: FunctionComponent<AdminCardsProps> = () => {
         user_id: card.user_id || "",
         createdAt: new Date(card.createdAt) || "",
         imageError: imageError.includes(card._id) ? "true" : "",
-        // imageError: card.imageError || "",
         addressError: addressError.includes(card._id) ? "true" : "",
       }));
 
@@ -100,22 +92,37 @@ const AdminCards: FunctionComponent<AdminCardsProps> = () => {
     {
       field: "id",
       headerName: "ID",
-      width: 130,
+      width: 100,
     },
     {
       field: "title",
       headerName: "Title",
-      width: 200,
+      width: 150,
     },
     {
       field: "subtitle",
       headerName: "Subtitle",
-      width: 200,
+      width: 150,
     },
     {
       field: "description",
       headerName: "Description",
-      width: 300,
+      width: 200,
+    },
+    {
+      field: "imageError",
+      headerName: "Image Error",
+      width: 100,
+    },
+    {
+      field: "addressError",
+      headerName: "Address Error",
+      width: 100,
+    },
+    {
+      field: "likesNumber",
+      headerName: "Number Of Likes",
+      width: 150,
     },
     {
       field: "phone",
@@ -167,11 +174,7 @@ const AdminCards: FunctionComponent<AdminCardsProps> = () => {
       headerName: "Business Number",
       width: 150,
     },
-    {
-      field: "likesNumber",
-      headerName: "Number Of Likes",
-      width: 150,
-    },
+   
     {
       field: "createdAt",
       headerName: "Created At",
@@ -182,16 +185,7 @@ const AdminCards: FunctionComponent<AdminCardsProps> = () => {
         return date.toLocaleDateString("en-US");
       },
     },
-    {
-      field: "imageError",
-      headerName: "Image Error",
-      width: 150,
-    },
-    {
-      field: "addressError",
-      headerName: "Address Error",
-      width: 150,
-    },
+    
   ];
   const paginationModel = { page: 0, pageSize: 5 };
 

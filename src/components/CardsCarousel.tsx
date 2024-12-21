@@ -44,9 +44,7 @@ const CardsCarousel: FunctionComponent<CardsCarouselProps> = ({
   }
 
   function sortCards(cards: CardRecFull[], sort: string): CardRecFull[] {
-    // if (sort === "") return cards;
 
-    // const searchLower = searchString.toLowerCase();
     switch (sort) {
       case "sortByBusiness":
         return cards.sort((a, b) => {
@@ -97,11 +95,11 @@ const CardsCarousel: FunctionComponent<CardsCarouselProps> = ({
 
   let cardChunks: any = [];
 
-  // console.log("carsoule", carouselCardArray)
+
   useEffect(() => {
     cardChunks = chunkCards(carouselCardArray || [],8);
     setChunksArr(cardChunks);
-    // console.log("2",carouselCardArray)
+  
   }, [carouselCardArray, searchString,sort]);
 
   return (

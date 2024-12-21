@@ -20,7 +20,7 @@ interface LoginProps {
 
 const Login: FunctionComponent<LoginProps> = ({ setIsRegister }) => {
   const { setToken, setIsUsserLogedin } = useContext(GlobalProps);
-  // const [msg, setMsg] = useState("");
+
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
@@ -62,7 +62,7 @@ const Login: FunctionComponent<LoginProps> = ({ setIsRegister }) => {
     <div className="container d-flex justify-content-center align-item-center flex-column col-6">
       <h5 className="display-5 my-2">LOGIN</h5>
       <form onSubmit={formik.handleSubmit}>
-        {/* Email Field */}
+        
         <div className="mb-3">
           <TextField
             variant="outlined"

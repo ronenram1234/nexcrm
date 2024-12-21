@@ -22,7 +22,7 @@ const AdimCardsStat: FunctionComponent<AdimCardsStatProps> = () => {
   const [seriesGroup, setSeriesGroup] = useState<string[]>([]);
 
   useEffect(() => {
-    let series: string[] = [];
+    let series: string[] = []; 
     let val: number[] = [];
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
