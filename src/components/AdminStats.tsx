@@ -5,16 +5,17 @@ import AdimnUsersStat from "./AdimnUsersStat";
 
 interface AdminStatsProps {}
 
-
 const AdminStats: FunctionComponent<AdminStatsProps> = () => {
-  
-
   return (
     <>
-
-    <AdminCardsStat />
-    <AdimnUsersStat />
-   
+      <div className="container">
+        <div className="row">
+          <AdminCardsStat />
+        </div>
+        <div className="row">
+          <AdimnUsersStat />
+        </div>
+      </div>
     </>
   );
 };
