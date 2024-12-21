@@ -14,13 +14,52 @@ import { checkAddress } from "../services/cardServices";
 interface AdminCardsProps {}
 
 const AdminCards: FunctionComponent<AdminCardsProps> = () => {
-  const { cardArray, imageError } = useContext(GlobalProps);
+  const { cardArray, imageError, addressError, setAddressError } =
+    useContext(GlobalProps);
   const [cards, setCards] = useState<CardAdmin[]>([]);
 
-  //   let cards:CardRecFull[]= []
+  const handleChaeckAddress = async (card: CardRecFull): Promise<boolean> => {
+    try {
+      const res =
+        await checkAddress(`${card.address.street}, ${card.address.city},   ${card.address.state || ""} ${card.address.zip}
+    ${card.address.country}`);
+      if (res.data.status === "OK") {
+        // console.log("good");
+        return true;
+      } else {
+        // console.log(card._id);
+        return false;
+      }
+    } catch (err) {
+      console.log("bad address", card.address, err);
+      return false;
+    }
+  };
 
   useEffect(() => {
     if (cardArray !== null) {
+      const validateAddress = async () => {
+        const updatedAddressError: string[] = [];
+        await Promise.all(
+          cardArray.map(async (card) => {
+            const isValid = await handleChaeckAddress(card);
+            if (!isValid) {
+              updatedAddressError.push(card._id);
+            }
+          })
+        );
+        setAddressError(updatedAddressError);
+        // console.log(addressError);
+      };
+
+      validateAddress();
+    }
+  }, [cardArray, setAddressError]);
+
+  useEffect(() => {
+    if (cardArray !== null) {
+      // console.log(addressError);
+
       const cardAdmins: CardAdmin[] = cardArray.map((card) => ({
         id: card._id || "",
         title: card.title || "",
@@ -41,14 +80,8 @@ const AdminCards: FunctionComponent<AdminCardsProps> = () => {
         createdAt: new Date(card.createdAt) || "",
         imageError: imageError.includes(card._id) ? "true" : "",
         // imageError: card.imageError || "",
-        addressError: "",
+        addressError: addressError.includes(card._id) ? "true" : "",
       }));
-
-      cardArray.map((card) =>
-        checkAddress(`${card.address.street}, ${card.address.city},
-    ${card.address.state || ""} ${card.address.zip}
-    ${card.address.country}`)
-      );
 
       setCards(cardAdmins);
     }
@@ -182,7 +215,7 @@ const AdminCards: FunctionComponent<AdminCardsProps> = () => {
               columns={columns}
               getRowId={(row) => row.id}
               initialState={{ pagination: { paginationModel } }}
-              pageSizeOptions={[5, 10]}
+              pageSizeOptions={[5, 10, 20]}
               sx={{ border: 0 }}
             />
           </Paper>

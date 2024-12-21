@@ -3,6 +3,7 @@ import {  NewCard } from "../interfaces/Card";
 import { GoogleApiWrapper } from 'google-maps-react';
 
 const api: string = `${process.env.REACT_APP_API}/cards`;
+const googleApi:string = "AIzaSyCxEnj4F8H4Gu2hGfWH-sGPjhGNHwG_Un8"
 
 export function createCard(cardID: string): Promise<AxiosResponse> {
   return axios.post(api, { cardID, products: [], active: true });
@@ -111,13 +112,39 @@ let config = {
   data : data
 };
 
-return axios.request(config)
 
+
+return axios.request(config)
 
 }
 
-export function checkAddress(address:string){
 
-console.log(address)
+export function checkAddress(address:string):Promise<AxiosResponse>{
+
+  
+//   const validateAddress = async (address:string) => {
+//     try {
+//       const response = await axios.get(
+//         `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${googleApi}`
+//       );
+      
+//       if (response.data.status === 'OK') {
+//         // Valid address, display the first result
+//         const result = response.data.results[0];
+//         // console.log('Validated Address:', result.formatted_address);
+//       } else {
+//     console.log(address)
+//     console.log('Address could not be validated.');
+//   }
+// } catch (error) {
+//   console.error('Error during address validation:', error);
+// }
+// };
+
+// validateAddress(address)
+
+return axios.get(
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${googleApi}`
+        );
 
 }
