@@ -21,7 +21,6 @@ import { Jwt } from "./interfaces/Jwt";
 import { CardRecFull } from "./interfaces/Card";
 import About from "./components/About";
 
-
 import FavCards from "./components/FavCards";
 import MyCards from "./components/MyCards";
 import { errorMsg } from "./services/feedbackService";
@@ -51,6 +50,12 @@ interface GlobalPropsType {
 
   sort: string;
   setSort: React.Dispatch<React.SetStateAction<string>>;
+
+  imageError: string[];
+  setImageError: React.Dispatch<React.SetStateAction<string[]>>;
+  addressError:string[];
+  setAddressError: React.Dispatch<React.SetStateAction<string[]>>;
+
 }
 export const GlobalProps = createContext<GlobalPropsType>({
   isUserLogedin: false,
@@ -68,6 +73,10 @@ export const GlobalProps = createContext<GlobalPropsType>({
   setSearchString: () => {},
   sort: "",
   setSort: () => {},
+  imageError: [],
+  setImageError: () => {},
+  addressError:[],
+  setAddressError: () => {},
 });
 
 export async function getAllCardsFromAPI(
@@ -76,7 +85,13 @@ export async function getAllCardsFromAPI(
   try {
     const res = await getAllCards();
 
-    setCardArray(res.data);
+    const updatedCards = res.data.map((card: CardRecFull) => ({
+      ...card,
+      imageError: "false",
+      addressError: "false",
+    }));
+
+    setCardArray(updatedCards);
   } catch (err: any) {
     console.log(err);
     if (err.response) {
@@ -94,6 +109,8 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [searchString, setSearchString] = useState("");
   const [sort, setSort] = useState("");
+  const [imageError, setImageError] = useState<string[]>([]);
+  const [addressError, setAddressError] = useState<string[]>([]);
 
   const [isUserLogedin, setIsUsserLogedin] = useState(
     localToken === "" ? false : true
@@ -114,6 +131,10 @@ function App() {
     setSearchString,
     sort,
     setSort,
+    imageError,
+    setImageError,
+    addressError,
+    setAddressError,
   };
 
   // check if user alreadt login before

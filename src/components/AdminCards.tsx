@@ -9,41 +9,49 @@ import { DataGrid, GridColDef, GridValueGetter } from "@mui/x-data-grid";
 
 import Paper from "@mui/material/Paper";
 import { CardAdmin, CardRecFull } from "../interfaces/Card";
+import { checkAddress } from "../services/cardServices";
 
 interface AdminCardsProps {}
 
 const AdminCards: FunctionComponent<AdminCardsProps> = () => {
-  const { cardArray } = useContext(GlobalProps);
+  const { cardArray, imageError } = useContext(GlobalProps);
   const [cards, setCards] = useState<CardAdmin[]>([]);
 
   //   let cards:CardRecFull[]= []
 
   useEffect(() => {
     if (cardArray !== null) {
-        const cardAdmins: CardAdmin[] = cardArray.map((card) => ({
-            id: card._id || "",
-            title: card.title || "",
-            subtitle: card.subtitle || "",
-            description: card.description || "",
-            phone: card.phone || "",
-            email: card.email || "",
-            url: card.web || "",
-            state: card.address.state || "",
-            country: card.address.country || "",
-            city: card.address.city || "",
-            street: card.address.street || "",
-            houseNumber: card.address.houseNumber || 0,
-            zip: card.address.zip || 0,
-            bizNumber: card.bizNumber || 0,
-            likesNumber: card.likes ? card.likes.length : 0,
-            user_id: card.user_id || "",
-            createdAt: new Date(card.createdAt) || "",
-          }));
-        setCards(cardAdmins);
+      const cardAdmins: CardAdmin[] = cardArray.map((card) => ({
+        id: card._id || "",
+        title: card.title || "",
+        subtitle: card.subtitle || "",
+        description: card.description || "",
+        phone: card.phone || "",
+        email: card.email || "",
+        url: card.web || "",
+        state: card.address.state || "",
+        country: card.address.country || "",
+        city: card.address.city || "",
+        street: card.address.street || "",
+        houseNumber: card.address.houseNumber || 0,
+        zip: card.address.zip || 0,
+        bizNumber: card.bizNumber || 0,
+        likesNumber: card.likes ? card.likes.length : 0,
+        user_id: card.user_id || "",
+        createdAt: new Date(card.createdAt) || "",
+        imageError: imageError.includes(card._id) ? "true" : "",
+        // imageError: card.imageError || "",
+        addressError: "",
+      }));
 
-    } 
+      cardArray.map((card) =>
+        checkAddress(`${card.address.street}, ${card.address.city},
+    ${card.address.state || ""} ${card.address.zip}
+    ${card.address.country}`)
+      );
 
-        
+      setCards(cardAdmins);
+    }
   }, [cardArray]);
 
   const [loading, setLoading] = useState(false);
@@ -95,7 +103,6 @@ const AdminCards: FunctionComponent<AdminCardsProps> = () => {
       field: "imageUrl",
       headerName: "Image URL",
       width: 200,
-      
     },
     {
       field: "addressCity",
@@ -131,18 +138,27 @@ const AdminCards: FunctionComponent<AdminCardsProps> = () => {
       field: "likesNumber",
       headerName: "Number Of Likes",
       width: 150,
-      
     },
     {
-        field: "createdAt",
-        headerName: "Created At",
-        width: 180,
-         type: 'dateTime',
-        valueFormatter: (params) => {
-          const date = new Date(params);
+      field: "createdAt",
+      headerName: "Created At",
+      width: 180,
+      type: "dateTime",
+      valueFormatter: (params) => {
+        const date = new Date(params);
         return date.toLocaleDateString("en-US");
-        },
       },
+    },
+    {
+      field: "imageError",
+      headerName: "Image Error",
+      width: 150,
+    },
+    {
+      field: "addressError",
+      headerName: "Address Error",
+      width: 150,
+    },
   ];
   const paginationModel = { page: 0, pageSize: 5 };
 

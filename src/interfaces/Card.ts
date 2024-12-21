@@ -16,6 +16,8 @@ export interface CardAdmin {
   likesNumber: number;
   user_id: string;
   createdAt: Date;
+  imageError: string;
+  addressError: string;
   
 }
 
@@ -50,6 +52,7 @@ export interface CardRecFull {
   createdAt: string;
   __v?: number;
   _id: string;
+
 }
 
 // create new card

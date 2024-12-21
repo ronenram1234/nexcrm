@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import {  NewCard } from "../interfaces/Card";
+import { GoogleApiWrapper } from 'google-maps-react';
 
 const api: string = `${process.env.REACT_APP_API}/cards`;
 
@@ -112,5 +113,11 @@ let config = {
 
 return axios.request(config)
 
+
+}
+
+export function checkAddress(address:string){
+
+console.log(address)
 
 }

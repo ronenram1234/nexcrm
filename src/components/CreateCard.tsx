@@ -1,7 +1,6 @@
 import { FunctionComponent, useContext, useEffect, useState } from "react";
 import { CardRecFull } from "../interfaces/Card";
 
-
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import Col from "react-bootstrap/Col";
@@ -34,7 +33,7 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
   originScreen,
 }) => {
   const navigate = useNavigate();
-  const { currentUser, token, cardArray, setCardArray,isDarkMode } =
+  const { currentUser, token, cardArray, setCardArray, isDarkMode, imageError, setImageError } =
     useContext(GlobalProps);
   const [address, setAddress] = useState<string>(
     `${item.address.street} ${item.address.houseNumber}, ${item.address.city},  ${item.address.country}, ${item.address.zip}`
@@ -52,12 +51,26 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
   // Handle image error
   const handleImageError = () => {
     // console.log("Image failed to load for item ID:", item._id);
+    // const updatedCardArray =
+    //   cardArray?.map((rec,index) => {
+    //     if (item._id === rec._id) {
+          
+    //       rec.imageError = "true";
+    //       console.log(index)
+    //     }
+    //     return rec;
+    //   }) || [];
+
+    // setCardArray(updatedCardArray);
+    // !imageError.includes(item._id) && console.log(item._id)
+    !imageError.includes(item._id) && imageError.push(item._id)
+    setImageError(imageError)
+
     setImgError(true);
   };
 
   const handleHeartClick = (id: string) => {
-    // console.log("Token-", token);
-    // console.log("User ID-", currentUser?._id);
+
 
     setLikeDislike(id, token)
       .then((res) => {
@@ -81,8 +94,6 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
   };
 
   function handleTrashClick(bizNumber: number, token: string, cardId: string) {
-
-
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -90,26 +101,24 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
       showCancelButton: true,
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete it!"
+      confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
         deleteCard(bizNumber, token, cardId)
-      .then((res) => {
-        successMsg("Card deleted successfully!");
+          .then((res) => {
+            successMsg("Card deleted successfully!");
 
-        if (cardArray !== null)
-          setCardArray(cardArray.filter((card) => card._id !== cardId));
-      })
-      .catch((error) => {
-        errorMsg("Error deleting");
-        console.log(error);
-      });
+            if (cardArray !== null)
+              setCardArray(cardArray.filter((card) => card._id !== cardId));
+          })
+          .catch((error) => {
+            errorMsg("Error deleting");
+            console.log(error);
+          });
         // // Perform delete action
         // Swal.fire("Deleted!", "Your file has been deleted.", "success");
       }
     });
-
-    
   }
 
   function handleEditClick(item: CardRecFull) {
@@ -126,12 +135,14 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
   return (
     <>
       <Col key={ind}>
-      <Card
-        className={`h-100 ${isDarkMode ? "bg-dark text-light" : "bg-light text-dark"}`}
-      >
+        <Card
+          className={`h-100 ${isDarkMode ? "bg-dark text-light" : "bg-light text-dark"}`}
+        >
           <Card.Img
             variant="top"
-            src={imgError ? "/path/to/fallback-image.jpg" : item.image.url}
+            src={
+              imgError ? "image_error_replacment_picture.jpg" : item.image.url
+            }
             alt={item.image.alt}
             className="image"
             onError={handleImageError}
@@ -148,8 +159,10 @@ const CreateCard: FunctionComponent<CreateCardProps> = ({
           </ListGroup>
           <Card.Body className="icons">
             <>
-              <FontAwesomeIcon icon={faPhone} 
-              title="Call Number - will ve develop in the future"/>
+              <FontAwesomeIcon
+                icon={faPhone}
+                title="Call Number - will ve develop in the future"
+              />
 
               {/* {console.log(isHeartSelected)} */}
               {isHeartSelected ? (

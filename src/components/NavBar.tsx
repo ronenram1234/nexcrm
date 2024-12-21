@@ -162,7 +162,7 @@ const NavBar: FunctionComponent<NavBarProps> = () => {
                 <button
                   onClick={() => {
                     setSearchString(txt);
-                    console.log(txt);
+                    // console.log(txt);
                   }}
                 >
                   Search
