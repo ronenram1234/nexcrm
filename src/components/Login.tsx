@@ -29,8 +29,10 @@ const Login: FunctionComponent<LoginProps> = ({ setIsRegister }) => {
 
   const formik = useFormik<UserLoginFormValues>({
     initialValues: {
-      email: "onetwo@email.co",
-      password: "Abc!123Abc",
+      email: "",
+      password: "",
+      // email: "onetwo@email.co",
+      // password: "Abc!123Abc",
     },
     validationSchema: yup.object({
       email: yup.string().email("Invalid email").required("Email is required"),
